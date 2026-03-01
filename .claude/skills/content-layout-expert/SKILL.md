@@ -1,6 +1,6 @@
 ---
 name: content-layout-expert
-description: Convert article drafts between formats. DOCX/PDF to Markdown with image/table extraction, Markdown to HTML for WeChat/Xiumi. Features: auto-heading (#), image extraction ({dir}-image-{seq}.{ext}), table export to xlsx with styling, HTML output. Handles corrupted docx files via mammoth fallback.
+description: "Convert article drafts between formats. DOCX/PDF to Markdown with image/table extraction, Markdown to HTML for WeChat/Xiumi. Features: auto-heading (#), image extraction ({dir}-image-{seq}.{ext}), table export to xlsx with styling, HTML output. Handles corrupted docx files via mammoth fallback."
 ---
 
 # Content Layout Expert Skill
