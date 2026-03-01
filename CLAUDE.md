@@ -1,0 +1,208 @@
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+## Project Overview
+
+**Project:** Hepmad Personal Brand (Website)
+**Name Origin:** **H**arry + S**ep**tember + No**mad** = **Hepmad**
+
+**Goal:**
+- Personal brand website serving as the core media platform for Harry's online presence
+- Three content pillars: Life Story (人生母本), Travel (环球旅行), Indie Dev (独立开发)
+- Bilingual website (English default, Chinese supplementary), targeting global users with priority on overseas audiences
+- Foundation for independent products (DSP - Digital Skill Products, partnerships)
+
+**Current Phase:** Phase 1 - Infrastructure Building
+- Focus: Developing Agent Skills, strengthening core skills (math, coding, AI tools)
+- NOT building the actual website yet (that's Phase 2)
+
+## Project Structure
+
+```
+hepmad/                              # Root directory IS the website (will be Astro project)
+├── docs/                            # Local documentation (gitignored)
+│   ├── project_roadmap.md           # Overall project roadmap - READ FIRST for context
+│   ├── init_website_project.md      # Detailed website requirements and tech stack
+│   └── create-*-skill.md            # Agent Skills "plain language" specs (drafts, iterative)
+│
+├── .claude/
+│   └── skills/                      # Hepmad + HarryMath related Skills ONLY (committed to Git)
+│
+├── demo/                            # Demo files (gitignored)
+│
+└── [website code...]                # Astro + Tailwind project (Phase 2 - NOT YET CREATED)
+```
+
+**Key Directories:**
+- `docs/` - Contains all project planning docs. These are "plain language" requirements, not formal specs. Files here are gitignored.
+- `.claude/skills/` - Production Agent Skills folders. Each skill is a kebab-case folder with SKILL.md, scripts/, references/, assets/
+- `demo/` - Temporary demo/test files
+
+**Related Projects (separate directories):**
+- `~/projects/huang/` - HarryMath website (Hexo, reusing harryhmx.github.io)
+- `~/projects/rbh-core/` - RBH current site (Vue3 + Django)
+- `~/projects/really-brave-hearts/` - RBH refactor (Next.js - Phase 2)
+- `~/projects/[ai-agent-system]/` - AI Agent System (Phase 3 - to be created)
+
+## Tech Stack (Planned for Phase 2)
+
+### Hepmad Official Website
+```yaml
+Framework: Astro (latest version)
+Styling: Tailwind CSS
+Content: Markdown / MDX
+i18n: Astro built-in i18n (English default)
+Deployment: Cloudflare Pages (primary) / Netlify (backup)
+Domain: hepmad.com
+```
+
+**Why Astro:**
+- Purpose-built for content sites, zero JS by default
+- Built-in i18n support for bilingual content
+- Lightweight, pure static output
+- Cloudflare Pages: excellent overseas access, good domestic access, unlimited free bandwidth
+
+### Other Projects
+- **HarryMath**: Hexo (existing), hosted on GitHub Pages
+- **RBH Website**: Next.js + Tailwind + Vercel (refactor target)
+- **AI Agent System**: TBD (Phase 3 decision)
+
+## Agent Skills Development Workflow
+
+**Vibe Coding Approach:**
+
+1. Create `docs/create-xxx-skill.md` with "plain language" requirements (casual, iterative)
+2. AI Agent reads the file and executes development
+3. Test and validate → append new requirements with `---` separator
+4. The file itself becomes the requirement evolution record
+
+**Agent Skills Structure:**
+```
+xxx-skill/
+├── SKILL.md          # Required: Core file with metadata and instructions
+├── scripts/          # Optional: Executable scripts (Python, Bash, JS, etc.)
+├── references/       # Optional: Reference docs, API docs
+└── assets/           # Optional: Templates, configs, static resources
+```
+
+**Organization Principle:**
+- Agent Skills are organized by project
+- Hepmad project: `.claude/skills/` contains ONLY Hepmad website + HarryMath related skills
+- Other projects have their own `.claude/skills/` directories
+
+## Content Architecture
+
+### Three Content Pillars (Blog)
+| Pillar | Content Focus | Example Topics |
+|--------|---------------|----------------|
+| **Life Story** | Systematic record of growth and daily life | 2006-2026 timeline, personal growth reflections |
+| **Travel** | Travel stories, photos, maps, living abroad | Travel memoirs, country experiences, photo collections |
+| **Indie Dev** | Development logs, thoughts, behind-the-scenes | Dev journals, technical thoughts, project progress |
+
+**Content Boundary:** Math research and teaching videos are primarily shared on HarryMath sub-brand, not on main Hepmad site.
+
+### Projects Page Structure
+| Category | Content | Examples |
+|----------|---------|----------|
+| **Sub-brands** | Brands Harry created and leads | HarryMath |
+| **DSP** | AI Agent System | "Operating system" that runs Agent Skills |
+| **Partnerships** | Joint projects with partners | Overseas study/parenting, RBH English education |
+
+## Language Strategy
+
+- **Default: English** - complete content, timely updates
+- **Chinese: Supplementary** - serves domestic audience
+- **Deployment: Cloudflare Pages / Vercel** - best overseas access, accessible in China
+- **Cross-platform:** Chinese content can link to Xiaohongshu, WeChat, etc.
+
+## Development Phases
+
+### Phase 1 (Current): Infrastructure Building
+- Focus: Strengthen core skills, develop Agent Skills
+- NOT building websites or creating content yet
+- Agent Skills for: content layout, video editing, image processing, article creation
+- Research: Astro, Next.js, Remotion/Manim tech stacks
+- Support partner projects with existing Agent Skills
+
+### Phase 2: Development & Creation
+- Build Hepmad official website MVP (Astro + Tailwind)
+- Refactor RBH website (Next.js + Tailwind)
+- Use Agent Skills for efficient content creation and video production
+
+### Phase 3: AI Agent System Development
+- Develop AI Agent System MVP
+- After completion: start global travel preparation and content creation
+
+## AI Tools Ecosystem (Learn When Needed)
+
+**Principle:** Don't actively learn MCP, Obsidian, OpenClaw, n8n, etc. until Phase 2/3/4 when actually needed for specific use cases.
+
+| Tool | Potential Use Case Phase |
+|------|--------------------------|
+| MCP | Phase 2: Claude Code integration; Phase 3: AI Agent System protocol |
+| Obsidian | Phase 1/2: Skill/knowledge management; Phase 3: knowledge base RAG |
+| OpenClaw | Phase 3: Architecture reference for AI Agent System |
+| n8n | Phase 2: Content publishing automation |
+
+## Brand & Sub-brands
+
+### Main Brand: Hepmad
+- **Website:** hepmad.com (Phase 2)
+- **Content:** Life narrative, global travel, indie dev
+
+### Sub-brand: HarryMath
+- **Positioning:** Math education content creator
+- **Platforms:** BiliBili, Douyin, Xiaohongshu, harryhmx.github.io
+- **Tech Stack:** Remotion/Manim + Agent Skills
+- **Relationship:** Independent sub-brand under Hepmad; Hepmad shares occasional dev process, HarryMath site has detailed technical content
+
+### Partnership Projects
+- **Overseas Study/Parenting (with Bill):** Content operation (WeChat, Xiaohongshu)
+- **RBH English Education (with Bill, Ricky):** Gamified learning website (Next.js refactor in progress)
+
+## Common Development Tasks
+
+### Agent Skills Development (Phase 1)
+```bash
+# Create new skill spec
+# 1. Create docs/create-xxx-skill.md with plain language requirements
+# 2. Ask AI Agent to read and execute
+# 3. Iterate by appending with --- separator
+```
+
+### Website Development (Phase 2 - NOT YET)
+```bash
+# Astro + Tailwind setup (when Phase 2 begins)
+npm create astro@latest
+npx astro add tailwind
+
+# Development
+npm run dev
+
+# Build
+npm run build
+
+# Preview
+npm run preview
+```
+
+### Deployment (Phase 2 - Cloudflare Pages)
+- Connect GitHub repository
+- Auto-deploy on push to main branch
+- Build command: `npm run build`
+- Output directory: `dist/`
+
+## Important Notes
+
+1. **Phase 1 Focus:** This project is currently in planning/Phase 1. Do NOT start building the actual website yet. Focus on Agent Skills development and research.
+
+2. **Content Boundaries:** Hepmad main site focuses on three core pillars. HarryMath content goes to its own channels. DSP (AI Agent System) will have its own site. Partnership projects have independent sites.
+
+3. **Language:** Technical documentation and AI communication in English for precision.
+
+4. **Skills Organization:** Only Hepmad website + HarryMath related skills go in `.claude/skills/`. Other projects have their own skill directories.
+
+5. **Docs are Gitignored:** Files in `docs/` are gitignored - they're for local planning and iterative requirements gathering.
+
+6. **"Vibe Coding":** Requirements in `docs/` are casual "plain language" specs, not formal documents. Let them evolve naturally.
