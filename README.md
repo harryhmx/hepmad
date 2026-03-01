@@ -1,8 +1,8 @@
-# Hepmad Personal Brand Website
+# Hepmad Personal Brand
 
 > **H**arry + S**ep**tember + No**mad** = **Hepmad**
 
-Harry's personal brand series - serving as the core media platform for online presence.
+Serving as the core media platform for online presence.
 
 ## Project Status
 
@@ -52,7 +52,7 @@ Agent Skills are reusable skill packages that AI Agents can use out of the box.
 
 | Skill | Description | Status |
 |-------|-------------|--------|
-| `content-layout-expert` | DOCX/PDF to Markdown, Markdown to HTML conversion | ✅ Active |
+| `content-layout-expert` | DOCX/PDF -> Markdown -> HTML conversion | ✅ Active |
 
 ### Skill Structure
 
@@ -68,8 +68,7 @@ xxx-skill/
 
 | Brand | Positioning | Platforms |
 |-------|-------------|-----------|
-| **Hepmad** | Main personal brand | hepmad.com (Phase 2) |
-| **HarryMath** | Math education content creator | BiliBili, Douyin, Xiaohongshu, harryhmx.github.io |
+| **HarryMath** | Math education content creator | BiliBili, Douyin, Xiaohongshu, [Github Pages](https://harryhmx.github.io/) |
 
 ## Phases
 
@@ -83,4 +82,4 @@ xxx-skill/
 
 ## License
 
-© 2026 Harry. All rights reserved.
+© 2026 Hepmad Series. All rights reserved.

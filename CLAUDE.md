@@ -17,6 +17,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - Focus: Developing Agent Skills, strengthening core skills (math, coding, AI tools)
 - NOT building the actual website yet (that's Phase 2)
 
+**Repository:** https://github.com/harryhmx/hepmad
+
 ## Project Structure
 
 ```
@@ -163,6 +165,23 @@ xxx-skill/
 
 ## Common Development Tasks
 
+### Git Workflow
+
+**Solo Developer Workflow (Recommended for Phase 1):**
+```bash
+# For most changes: develop directly on main
+git add .
+git commit -m "feat: add new skill"
+git push
+```
+
+**When to Use Branches:**
+- Large features (Astro project setup in Phase 2)
+- Risky refactoring
+- When collaborating with others (Phase 3+)
+
+**For detailed Git workflow guidelines, see:** `docs/execution-log.md`
+
 ### Agent Skills Development (Phase 1)
 ```bash
 # Create new skill spec
@@ -196,6 +215,8 @@ npm run preview
 ## Important Notes
 
 1. **Phase 1 Focus:** This project is currently in planning/Phase 1. Do NOT start building the actual website yet. Focus on Agent Skills development and research.
+
+2. **Git Workflow:** As a solo developer, keep it simple - develop directly on `main` for most changes. Use branches only for large features or when collaborating. Detailed guidelines in `docs/execution-log.md`.
 
 2. **Content Boundaries:** Hepmad main site focuses on three core pillars. HarryMath content goes to its own channels. DSP (AI Agent System) will have its own site. Partnership projects have independent sites.
 
