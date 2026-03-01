@@ -88,6 +88,45 @@ xxx-skill/
 └── assets/           # Optional: Templates, configs, static resources
 ```
 
+**SKILL.md Format Standard:**
+```yaml
+---
+name: skill-name          # Required, kebab-case
+description: "Clear description of what this skill does"  # Required, MUST use quotes
+author: author-name       # Optional
+version: "1.0.0"          # Optional
+---
+
+# Skill Name (Human Readable)
+
+## Use Cases
+- Use case 1
+- Use case 2
+
+## Input
+- Input description
+
+## Output
+- Output description
+
+## How to Use
+Usage instructions
+
+## Scripts
+- Script descriptions
+
+## Dependencies
+- Dependency list
+
+## Notes
+- Additional notes
+```
+
+**Critical Format Rules:**
+- `description` field **MUST be wrapped in quotes** to avoid YAML parsing errors with special characters (colons, commas, etc.)
+- `name` should use kebab-case (lowercase with hyphens)
+- Separate front matter with `---` on its own line
+
 **Organization Principle:**
 - Agent Skills are organized by project
 - Hepmad project: `.claude/skills/` contains ONLY Hepmad website + HarryMath related skills
