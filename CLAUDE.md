@@ -9,7 +9,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **Goal:**
 - Personal brand website serving as the core media platform for Harry's online presence
-- Three content pillars: Life Story (人生母本), Travel (环球旅行), Indie Dev (独立开发)
+- Three content pillars: Life Story (人生母本), Travel (环球旅行), Solo Dev (独立开发)
 - Bilingual website (English default, Chinese supplementary), targeting global users with priority on overseas audiences
 - Foundation for independent products (DSP - Digital Skill Products, partnerships)
 
@@ -139,7 +139,7 @@ Usage instructions
 |--------|---------------|----------------|
 | **Life Story** | Systematic record of growth and daily life | 2006-2026 timeline, personal growth reflections |
 | **Travel** | Travel stories, photos, maps, living abroad | Travel memoirs, country experiences, photo collections |
-| **Indie Dev** | Development logs, thoughts, behind-the-scenes | Dev journals, technical thoughts, project progress |
+| **Solo Dev** | Development logs, thoughts, behind-the-scenes | Dev journals, technical thoughts, project progress |
 
 **Content Boundary:** Math research and teaching videos are primarily shared on HarryMath sub-brand, not on main Hepmad site.
 
@@ -272,12 +272,19 @@ npm run preview
 
 2. **Git Workflow:** As a solo developer, keep it simple - develop directly on `main` for most changes. Use branches only for large features or when collaborating. Detailed guidelines in `docs/execution-log.md`.
 
-2. **Content Boundaries:** Hepmad main site focuses on three core pillars. HarryMath content goes to its own channels. DSP (AI Agent System) will have its own site. Partnership projects have independent sites.
+3. **Content Boundaries:** Hepmad main site focuses on three core pillars. HarryMath content goes to its own channels. DSP (AI Agent System) will have its own site. Partnership projects have independent sites.
 
-3. **Language:** Technical documentation and AI communication in English for precision.
+4. **Language:** Technical documentation and AI communication in English for precision.
 
-4. **Skills Organization:** Only Hepmad website + HarryMath related skills go in `.claude/skills/`. Other projects have their own skill directories.
+5. **Skills Organization:** Only Hepmad website + HarryMath related skills go in `.claude/skills/`. Other projects have their own skill directories.
 
-5. **Docs are Gitignored:** Files in `docs/` are gitignored - they're for local planning and iterative requirements gathering.
+6. **Docs are Gitignored:** Files in `docs/` are gitignored - they're for local planning and iterative requirements gathering.
 
-6. **"Vibe Coding":** Requirements in `docs/` are casual "plain language" specs, not formal documents. Let them evolve naturally.
+7. **"Vibe Coding":** Requirements in `docs/` are casual "plain language" specs, not formal documents. Let them evolve naturally.
+
+8. **Always Use Absolute Paths for File Operations:** When using Bash tool to perform operations that modify the filesystem (e.g., `rm`, `mv`, file conversion), ALWAYS use absolute paths. Relative paths depend on current working directory and can lead to mistakes.
+   - ✓ `rm -rf /home/harry/projects/hepmad/demo/bill-tao/math/images`
+   - ✓ `python /home/harry/projects/hepmad/.claude/skills/content-layout-expert/scripts/convert_to_markdown.py /path/to/file.docx`
+   - ✗ `rm -rf images tables` (unsafe - depends on cwd)
+   - ✗ `python convert.py file.docx` (unsafe - depends on cwd)
+   - Exception: Read-only commands like `ls`, `cat`, `grep` may use relative paths for convenience when the context is clear.

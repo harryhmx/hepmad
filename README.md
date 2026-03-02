@@ -20,7 +20,7 @@ Hepmad is Harry's personal brand platform built on three content pillars:
 |--------|---------------|
 | **Life Story** (人生母本) | Systematic record of growth and daily life |
 | **Travel** (环球旅行) | Travel stories, photos, maps, living abroad |
-| **Indie Dev** (独立开发) | Development logs, thoughts, behind-the-scenes |
+| **Solo Dev** (独立开发) | Development logs, thoughts, behind-the-scenes |
 
 ## Project Structure
 
@@ -50,9 +50,9 @@ Agent Skills are reusable skill packages that AI Agents can use out of the box.
 
 ### Current Skills
 
-| Skill | Description | Status |
-|-------|-------------|--------|
-| `content-layout-expert` | DOCX/PDF -> Markdown -> HTML conversion | ✅ Active |
+| Skill | Description | SKILL.md | Status |
+|-------|-------------|----------|--------|
+| `content-layout-expert` | DOCX/PDF -> Markdown -> HTML conversion | [Link](/.claude/skills/content-layout-expert/SKILL.md) | ✅ Active |
 
 ### Skill Structure
 

@@ -121,17 +121,39 @@ def fix_corrupted_docx(docx_path: Path) -> Path:
         raise
 
 
-def extract_text_from_xml(docx_path: Path) -> str:
+def extract_text_from_xml(docx_path: Path) -> tuple[str, int, int]:
     """Extract text with formatting directly from docx XML.
     This is more accurate than mammoth for corrupted files with formatting issues.
+
+    Returns:
+        tuple: (markdown_text, image_count, table_count)
     """
     import xml.etree.ElementTree as ET
 
     lines = []
+    image_counter = 0
+    table_counter = 0
 
     try:
         with ZipFile(docx_path, 'r') as docx_zip:
-            ns = {'w': 'http://schemas.openxmlformats.org/wordprocessingml/2006/main'}
+            ns = {'w': 'http://schemas.openxmlformats.org/wordprocessingml/2006/main',
+                  'pic': 'http://schemas.openxmlformats.org/drawingml/2006/picture',
+                  'a': 'http://schemas.openxmlformats.org/drawingml/2006/main',
+                  'r': 'http://schemas.openxmlformats.org/officeDocument/2006/relationships'}
+
+            # Parse relationships to check for valid image references
+            valid_image_rids = set()
+            try:
+                with docx_zip.open('word/_rels/document.xml.rels') as rels_xml:
+                    rels_tree = ET.parse(rels_xml)
+                    for rel in rels_tree.getroot():
+                        rel_id = rel.get('Id')
+                        target = rel.get('Target')
+                        # Only count relationships that point to actual media files
+                        if target and target.startswith('media/'):
+                            valid_image_rids.add(rel_id)
+            except:
+                pass
 
             # First, parse styles.xml to get character style bold information
             bold_char_styles = set()
@@ -175,117 +197,187 @@ def extract_text_from_xml(docx_path: Path) -> str:
                 tree = ET.parse(doc_xml)
                 root = tree.getroot()
 
-                # First, collect all table cell elements to skip paragraphs inside them
+                # Find the body element
+                body = root.find('.//w:body', ns)
+                if body is None:
+                    body = root
+
+                # Collect all table cell elements to identify nested paragraphs
                 table_cells = set()
-                for tc in root.findall('.//w:tc', ns):
-                    # Add all paragraph children of this table cell to skip set
+                for tc in body.findall('.//w:tc', ns):
                     for p in tc.findall('.//w:p', ns):
                         table_cells.add(id(p))
 
-                # Find all paragraphs, but skip those inside tables
-                for para in root.findall('.//w:p', ns):
-                    # Skip paragraphs that are inside table cells
-                    if id(para) in table_cells:
-                        continue
+                # Track which paragraphs we've already processed (to skip table-cell paragraphs)
+                processed_paragraphs = set()
 
-                    # Get runs and their formatting
-                    runs = para.findall('.//w:r', ns)
+                # Track which tables we've processed (to skip nested tables)
+                processed_tables = set()
 
-                    if not runs:
-                        continue
+                # Process body elements in order to maintain paragraph/table ordering
+                for elem in body:
+                    # Check if this is a paragraph (w:p)
+                    if elem.tag.endswith('p') or elem.tag == '{http://schemas.openxmlformats.org/wordprocessingml/2006/main}p':
+                        # Skip paragraphs inside table cells
+                        if id(elem) in table_cells:
+                            continue
 
-                    # Collect (text, is_bold) tuples, preserving all text including whitespace
-                    run_data = []
-                    non_empty_runs = []  # Runs that have non-whitespace content
+                        # Skip already processed paragraphs
+                        if id(elem) in processed_paragraphs:
+                            continue
+                        processed_paragraphs.add(id(elem))
 
-                    for run in runs:
-                        # Get text from this run - preserve original text
-                        texts = []
-                        for t in run.findall('.//w:t', ns):
-                            if t.text:
-                                texts.append(t.text)
+                        # Check if this paragraph contains images
+                        # Count only w:drawing elements with valid image references
+                        images_in_para = 0
+                        for drawing in elem.findall('.//w:drawing', ns):
+                            # Check if this drawing has a valid blip with r:embed
+                            blip = drawing.find('.//a:blip', ns)
+                            if blip is not None:
+                                embed = blip.get(f'{{{ns["r"]}}}embed')
+                                if embed and embed in valid_image_rids:
+                                    images_in_para += 1
 
-                        run_text = ''.join(texts)
-                        if not run_text:
-                            continue  # Skip completely empty runs
+                        # Get runs and their formatting
+                        runs = elem.findall('.//w:r', ns)
 
-                        # Check if this run is bold (from direct formatting or character style)
-                        rpr = run.find('w:rPr', ns)
-                        is_bold = False
+                        if not runs and images_in_para == 0:
+                            continue
 
-                        if rpr is not None:
-                            # Check direct bold formatting
-                            b = rpr.find('w:b', ns)
-                            is_bold = b is not None
+                        # Collect (text, is_bold) tuples, preserving all text including whitespace
+                        run_data = []
+                        non_empty_runs = []  # Runs that have non-whitespace content
 
-                            # If not directly bold, check if it has a bold character style
-                            if not is_bold:
-                                rstyle = rpr.find('w:rStyle', ns)
-                                if rstyle is not None:
-                                    style_val = rstyle.get('{http://schemas.openxmlformats.org/wordprocessingml/2006/main}val')
-                                    if style_val in bold_char_styles:
-                                        is_bold = True
+                        for run in runs:
+                            # Get text from this run - preserve original text
+                            texts = []
+                            for t in run.findall('.//w:t', ns):
+                                if t.text:
+                                    texts.append(t.text)
 
-                        # For whitespace-only runs, treat as non-bold (don't add ** markers)
-                        has_content = run_text.strip() != ''
-                        effective_bold = is_bold and has_content
+                            run_text = ''.join(texts)
+                            if not run_text:
+                                continue  # Skip completely empty runs
 
-                        run_data.append((run_text, effective_bold))
+                            # Check if this run is bold (from direct formatting or character style)
+                            rpr = run.find('w:rPr', ns)
+                            is_bold = False
 
-                        # Track runs with non-whitespace content for bold detection
-                        if has_content:
-                            non_empty_runs.append(is_bold)
+                            if rpr is not None:
+                                # Check direct bold formatting
+                                b = rpr.find('w:b', ns)
+                                is_bold = b is not None
 
-                    if not run_data:
-                        continue  # Skip paragraphs with no content at all
+                                # If not directly bold, check if it has a bold character style
+                                if not is_bold:
+                                    rstyle = rpr.find('w:rStyle', ns)
+                                    if rstyle is not None:
+                                        style_val = rstyle.get('{http://schemas.openxmlformats.org/wordprocessingml/2006/main}val')
+                                        if style_val in bold_char_styles:
+                                            is_bold = True
 
-                    # Check if all runs with actual content are bold
-                    # (ignore whitespace-only runs for bold detection)
-                    all_bold = non_empty_runs and all(is_bold for is_bold in non_empty_runs)
-                    any_bold = any(is_bold for _, is_bold in run_data)
+                            # For whitespace-only runs, treat as non-bold (don't add ** markers)
+                            has_content = run_text.strip() != ''
+                            effective_bold = is_bold and has_content
 
-                    # Build the paragraph text
-                    if all_bold and any_bold:
-                        # All runs with content are bold - combine and wrap once
-                        combined_text = ''.join(text for text, _ in run_data)
-                        # Strip leading/trailing whitespace from the content inside bold markers
-                        combined_text = combined_text.strip()
-                        lines.append(f'**{combined_text}**')
-                    else:
-                        # Mixed formatting or no bold - merge consecutive bold runs
-                        para_parts = []
-                        i = 0
-                        while i < len(run_data):
-                            text, is_bold = run_data[i]
+                            run_data.append((run_text, effective_bold))
 
-                            if is_bold:
-                                # Start of a bold sequence - find all consecutive bold runs
-                                bold_text_parts = [text]
-                                j = i + 1
-                                while j < len(run_data) and run_data[j][1]:
-                                    bold_text_parts.append(run_data[j][0])
-                                    j += 1
-                                # Combine consecutive bold runs and strip leading/trailing whitespace
-                                bold_content = ''.join(bold_text_parts).strip()
-                                para_parts.append(f'**{bold_content}**')
-                                i = j
+                            # Track runs with non-whitespace content for bold detection
+                            if has_content:
+                                non_empty_runs.append(is_bold)
+
+                        # Handle image-only paragraphs (no text runs)
+                        if not run_data and images_in_para > 0:
+                            para_text = ''
+                        elif not run_data:
+                            continue  # Skip paragraphs with no content at all
+                        else:
+                            # Check if all runs with actual content are bold
+                            all_bold = non_empty_runs and all(is_bold for is_bold in non_empty_runs)
+                            any_bold = any(is_bold for _, is_bold in run_data)
+
+                            # Build the paragraph text
+                            if all_bold and any_bold:
+                                # All runs with content are bold - combine and wrap once
+                                combined_text = ''.join(text for text, _ in run_data)
+                                # Strip leading/trailing whitespace from the content inside bold markers
+                                combined_text = combined_text.strip()
+                                para_text = f'**{combined_text}**'
                             else:
-                                para_parts.append(text)
-                                i += 1
+                                # Mixed formatting or no bold - merge consecutive bold runs
+                                para_parts = []
+                                i = 0
+                                while i < len(run_data):
+                                    text, is_bold = run_data[i]
 
-                        # Strip leading/trailing whitespace from final paragraph
-                        lines.append(''.join(para_parts).strip())
+                                    if is_bold:
+                                        # Start of a bold sequence - find all consecutive bold runs
+                                        bold_text_parts = [text]
+                                        j = i + 1
+                                        while j < len(run_data) and run_data[j][1]:
+                                            bold_text_parts.append(run_data[j][0])
+                                            j += 1
+                                        # Combine consecutive bold runs and strip leading/trailing whitespace
+                                        bold_content = ''.join(bold_text_parts).strip()
+                                        para_parts.append(f'**{bold_content}**')
+                                        i = j
+                                    else:
+                                        para_parts.append(text)
+                                        i += 1
+
+                                # Strip leading/trailing whitespace from final paragraph
+                                para_text = ''.join(para_parts).strip()
+
+                        # Append image markers if this paragraph has images
+                        if images_in_para > 0:
+                            markers = []
+                            for _ in range(images_in_para):
+                                image_counter += 1
+                                markers.append(f'(image-{image_counter})')
+                            if para_text:
+                                para_text = f"{para_text} {' '.join(markers)}"
+                            else:
+                                para_text = ' '.join(markers)
+
+                        if para_text:
+                            lines.append(para_text)
+
+                    # Check if this is a table (w:tbl)
+                    elif elem.tag.endswith('tbl') or elem.tag == '{http://schemas.openxmlformats.org/wordprocessingml/2006/main}tbl':
+                        # Skip nested tables (tables inside table cells)
+                        # Find parent to check if we're inside a table cell
+                        parent_map = {c: p for p in body.iter() for c in p}
+                        current = elem
+                        is_nested = False
+                        while current in parent_map:
+                            parent = parent_map[current]
+                            if parent.tag.endswith('tc'):
+                                is_nested = True
+                                break
+                            current = parent
+
+                        if is_nested:
+                            continue
+
+                        # Skip already processed tables
+                        if id(elem) in processed_tables:
+                            continue
+                        processed_tables.add(id(elem))
+
+                        # Add table marker
+                        table_counter += 1
+                        lines.append(f'(table-{table_counter})')
 
     except Exception as e:
         print(f"  Warning: Could not extract text from XML: {e}")
-        return ""
+        return "", 0, 0
 
     # Clean up lines using shared function
     cleaned_lines = [clean_markdown_text(line) for line in lines]
-    return '\n\n'.join(cleaned_lines)
+    return '\n\n'.join(cleaned_lines), image_counter, table_counter
 
 
-def extract_text_with_mammoth(docx_path: Path, fixed_path: Path = None) -> str:
+def extract_text_with_mammoth(docx_path: Path, fixed_path: Path = None) -> tuple[str, int, int]:
     """Use mammoth library to extract text from corrupted docx files with formatting.
 
     NOTE: For files with formatting issues, prefer extract_text_from_xml() instead.
@@ -293,6 +385,9 @@ def extract_text_with_mammoth(docx_path: Path, fixed_path: Path = None) -> str:
     Args:
         docx_path: Path to the original docx file
         fixed_path: Path to the fixed docx file (if fix_corrupted_docx was used)
+
+    Returns:
+        tuple: (markdown_text, image_count, table_count)
     """
     # For now, use the XML-based extraction for more accurate formatting
     return extract_text_from_xml(docx_path)
@@ -372,7 +467,8 @@ class DocxToMarkdown:
         self.markdown_lines: list[str] = []
         self.first_line_processed = False
         # Get directory name for image naming (e.g., "news-1" from "/path/to/news-1/file.docx")
-        self.dir_name = self.docx_path.parent.name
+        # If parent is current directory (name is empty), use the actual directory name
+        self.dir_name = self.docx_path.parent.name or self.docx_path.parent.resolve().name
         self.extracted_images: list[str] = []
         self.tables_data: list[list[list[str]]] = []  # Store tables for xlsx export
 
@@ -607,14 +703,15 @@ class DocxToMarkdown:
         # Check if using mammoth fallback mode
         if self._use_mammoth:
             print("Using mammoth library for text extraction...")
-            text = extract_text_with_mammoth(self.docx_path, self._temp_file)
+            text, extracted_image_count, extracted_table_count = extract_text_with_mammoth(
+                self.docx_path, self._temp_file)
 
-            # Extract images
+            # Extract images (the text already has image markers embedded)
             print("Extracting images...")
             self.extract_all_images()
             print(f"Extracted {len(self.extracted_images)} images\n")
 
-            # Extract tables from XML
+            # Extract tables from XML (the text already has table markers embedded)
             print("Attempting to extract tables from XML...")
             self.tables_data = extract_tables_from_xml(self.docx_path)
             if self.tables_data:
@@ -622,19 +719,31 @@ class DocxToMarkdown:
             else:
                 print("No tables found\n")
 
-            # Process text into lines
+            # Process text into lines - text already has (image-N) and (table-N) markers
             import re
+            # Split by paragraph separator (double newlines)
+            lines = text.split('\n\n')
             for line in lines:
                 line = line.strip()
                 if line:
                     if not self.first_line_processed:
-                        line = f"# {line}"
-                        # Remove all bold/italic markers from heading
-                        line = line.replace('**', '').replace('*', '')
-                        self.first_line_processed = True
-
-                    # Remove consecutive bold markers: **** -> (empty)
-                    line = re.sub(r'\*\*\*\*', '', line)
+                        # For heading, remove image/table markers from the title line
+                        line_for_heading = re.sub(r'\s*\(image-\d+\)', '', line)
+                        line_for_heading = re.sub(r'\s*\(table-\d+\)', '', line_for_heading)
+                        line_for_heading = line_for_heading.strip()
+                        if line_for_heading:
+                            line = f"# {line_for_heading}"
+                            # Remove all bold/italic markers from heading
+                            line = line.replace('**', '').replace('*', '')
+                            self.first_line_processed = True
+                        else:
+                            # Title was only markers, use the original line
+                            line = f"# {line}"
+                            line = line.replace('**', '').replace('*', '')
+                            self.first_line_processed = True
+                    else:
+                        # For non-heading lines, keep the markers as-is
+                        pass
 
                     self.markdown_lines.append(line)
 

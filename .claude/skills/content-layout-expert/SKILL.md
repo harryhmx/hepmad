@@ -20,7 +20,7 @@ description: "Convert article drafts between formats. DOCX/PDF to Markdown with 
 ## Output
 | Input Format | Output Format | Description |
 |--------------|---------------|-------------|
-| .docx, .pdf | .md | Markdown without image links (images extracted separately) |
+| .docx, .pdf | .md | Markdown with image/table position markers: `(image-N)`, `(table-N)` |
 | .docx | images/ | Extracted images: `{directory-name}-image-{sequence}.{ext}` |
 | .docx | tables/ | Extracted tables: `{directory-name}-table-{sequence}.xlsx` (styled) |
 | .md | .html | Styled HTML for copy-paste to WeChat/Xiumi |
@@ -54,9 +54,11 @@ pip install python-docx pypdf Pillow openpyxl markdown mammoth
 
 ## Notes
 - First line is automatically converted to a heading (#)
-- Markdown files do NOT include image links (images are extracted separately)
+- **Image and table position markers** are embedded in Markdown at original positions: `(image-N)`, `(table-N)`
+- Images are extracted to `images/` directory and tables to `tables/` directory (xlsx format)
+- Image/table markers allow users to know where content was originally placed
 - Images are saved as `{directory-name}-image-{sequence}.{ext}`
 - Tables are exported with styling: header (gray bg, bold), zebra striping, centered
 - Invalid/corrupted images (less than 100 bytes) are skipped automatically
-- Corrupted docx files are handled with mammoth fallback (text + images + tables)
+- Corrupted docx files are handled with mammoth fallback (XML-based extraction with markers)
 - HTML output includes embedded styles for WeChat compatibility
