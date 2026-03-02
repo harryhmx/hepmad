@@ -222,8 +222,23 @@ git push
 **For detailed Git workflow guidelines, see:** `docs/execution-log.md`
 
 ### Agent Skills Development (Phase 1)
+
+**Running Agent Skill Scripts:**
+
+> **IMPORTANT:** Always activate the virtual environment before running any Python script from Agent Skills.
+
 ```bash
-# Create new skill spec
+# Method 1: Activate venv first, then run script
+source ~/venv/hepmad/bin/activate
+cd ~/projects/hepmad
+python .claude/skills/<skill-name>/scripts/<script>.py <arguments>
+
+# Method 2: One-liner (absolute paths)
+source ~/venv/hepmad/bin/activate && python ~/projects/hepmad/.claude/skills/<skill-name>/scripts/<script>.py <arguments>
+```
+
+**Creating New Skills:**
+```bash
 # 1. Create docs/create-xxx-skill.md with plain language requirements
 # 2. Ask AI Agent to read and execute
 # 3. Iterate by appending with --- separator

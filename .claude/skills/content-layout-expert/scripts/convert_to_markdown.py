@@ -6,6 +6,7 @@ Extracts images, tables, and preserves text formatting (bold, italic).
 
 import sys
 import subprocess
+import re
 from pathlib import Path
 from docx import Document
 from docx.document import Document as DocumentType
@@ -21,6 +22,35 @@ try:
     PDF_SUPPORT = True
 except ImportError:
     PDF_SUPPORT = False
+
+# For PDF table extraction (optional)
+try:
+    import pdfplumber
+    PDF_TABLE_SUPPORT = True
+except ImportError:
+    PDF_TABLE_SUPPORT = False
+
+
+def clean_markdown_text(text: str) -> str:
+    """Clean up markdown text by fixing bold/italic marker spacing."""
+    if not text:
+        return text
+
+    text = text.strip()
+    # Remove consecutive bold markers: **** -> (empty)
+    text = re.sub(r'\*\*\*\*', '', text)
+    # Remove bold markers that contain only whitespace: **   ** -> ' '
+    text = re.sub(r'\*\*\s+\*\*', ' ', text)
+    # Remove italic markers that contain only whitespace: *   * -> ' '
+    text = re.sub(r'\*(?!\*)\s+\*(?!\*)', ' ', text)
+    # Fix spaces within bold markers: **   text   ** -> **text**
+    text = re.sub(r'\*\*\s+', '**', text)
+    text = re.sub(r'\s+\*\*', '**', text)
+    # Fix spaces within italic markers: *   text   * -> *text*
+    text = re.sub(r'\*(?!\*)\s+', '*', text)
+    text = re.sub(r'\s+\*(?!\*)', '*', text)
+
+    return text
 
 
 def guess_extension(data: bytes) -> str:
@@ -110,7 +140,7 @@ def extract_text_from_xml(docx_path: Path) -> str:
                     styles_tree = ET.parse(styles_xml)
                     styles_root = styles_tree.getroot()
 
-                    # Find all character styles that are bold
+                    # Find all character styles that are bold (explicit type="character")
                     for style in styles_root.findall('.//w:style[@w:type="character"]', ns):
                         rpr = style.find('w:rPr', ns)
                         if rpr is not None:
@@ -118,6 +148,23 @@ def extract_text_from_xml(docx_path: Path) -> str:
                             if b is not None:
                                 style_id = style.get('{http://schemas.openxmlformats.org/wordprocessingml/2006/main}styleId')
                                 if style_id:
+                                    bold_char_styles.add(style_id)
+
+                    # Also check all styles (not just character type) for bold default
+                    # Some styles may not have explicit type attribute
+                    for style in styles_root.findall('.//w:style', ns):
+                        style_id = style.get('{http://schemas.openxmlformats.org/wordprocessingml/2006/main}styleId')
+                        if not style_id:
+                            continue
+
+                        # Check if this style has bold formatting
+                        rpr = style.find('w:rPr', ns)
+                        if rpr is not None:
+                            b = rpr.find('w:b', ns)
+                            if b is not None:
+                                # Check if w:b/@w:val is not "false" or 0
+                                val = b.get('{http://schemas.openxmlformats.org/wordprocessingml/2006/main}val', '1')
+                                if val != '0' and val != 'false':
                                     bold_char_styles.add(style_id)
             except:
                 # No styles.xml or error reading it
@@ -218,7 +265,7 @@ def extract_text_from_xml(docx_path: Path) -> str:
                                 while j < len(run_data) and run_data[j][1]:
                                     bold_text_parts.append(run_data[j][0])
                                     j += 1
-                                # Combine consecutive bold runs into one span, stripping internal whitespace
+                                # Combine consecutive bold runs and strip leading/trailing whitespace
                                 bold_content = ''.join(bold_text_parts).strip()
                                 para_parts.append(f'**{bold_content}**')
                                 i = j
@@ -233,7 +280,9 @@ def extract_text_from_xml(docx_path: Path) -> str:
         print(f"  Warning: Could not extract text from XML: {e}")
         return ""
 
-    return '\n\n'.join(lines)
+    # Clean up lines using shared function
+    cleaned_lines = [clean_markdown_text(line) for line in lines]
+    return '\n\n'.join(cleaned_lines)
 
 
 def extract_text_with_mammoth(docx_path: Path, fixed_path: Path = None) -> str:
@@ -480,9 +529,36 @@ class DocxToMarkdown:
         if not text:
             return ""
 
-        # Check for styles
-        is_bold = run.bold
-        is_italic = run.italic
+        # Check for styles using multiple methods
+        is_bold = False
+        is_italic = False
+
+        # Method 1: Use python-docx built-in properties
+        try:
+            is_bold = run.bold if run.bold is not None else False
+            is_italic = run.italic if run.italic is not None else False
+        except:
+            pass
+
+        # Method 2: Direct XML parsing for more reliable detection
+        if not is_bold or not is_italic:
+            try:
+                import xml.etree.ElementTree as ET
+                ns = {'w': 'http://schemas.openxmlformats.org/wordprocessingml/2006/main'}
+                rpr = run._element.find('.//w:rPr', ns)
+                if rpr is not None:
+                    # Check bold
+                    b = rpr.find('w:b', ns)
+                    if b is not None:
+                        val = b.get('{http://schemas.openxmlformats.org/wordprocessingml/2006/main}val', '1')
+                        is_bold = is_bold or (val != '0' and val != 'false')
+                    # Check italic
+                    i = rpr.find('w:i', ns)
+                    if i is not None:
+                        val = i.get('{http://schemas.openxmlformats.org/wordprocessingml/2006/main}val', '1')
+                        is_italic = is_italic or (val != '0' and val != 'false')
+            except:
+                pass
 
         # Apply markdown formatting
         if is_bold and is_italic:
@@ -498,17 +574,31 @@ class DocxToMarkdown:
         """Convert a paragraph to markdown. Returns (md_text, images_used_count)."""
         text = paragraph.text.strip()
         if not text:
+            # Check if this paragraph contains only images
+            images_in_para = self.count_images_in_paragraph(paragraph)
+            if images_in_para > 0:
+                # Insert image markers at this position
+                markers = []
+                for i in range(images_in_para):
+                    self.image_counter += 1
+                    markers.append(f"(image-{self.image_counter})")
+                return ' '.join(markers), images_in_para
             return "", 0
 
         # Format runs with styling
         formatted_text = ''.join(self.format_run(run) for run in paragraph.runs)
 
-        # Count images in this paragraph (images are extracted separately, not included in markdown)
+        # Count images in this paragraph
         images_in_para = self.count_images_in_paragraph(paragraph)
         images_used = images_in_para
 
-        # Images are extracted to images/ directory but not included in markdown
-        # Users can manually add them if needed
+        # If paragraph has images, append image markers after the text
+        if images_in_para > 0:
+            markers = []
+            for i in range(images_in_para):
+                self.image_counter += 1
+                markers.append(f"(image-{self.image_counter})")
+            return f"{formatted_text} {' '.join(markers)}", images_in_para
 
         return formatted_text, images_used
 
@@ -533,15 +623,19 @@ class DocxToMarkdown:
                 print("No tables found\n")
 
             # Process text into lines
-            lines = text.split('\n')
+            import re
             for line in lines:
                 line = line.strip()
                 if line:
                     if not self.first_line_processed:
                         line = f"# {line}"
-                        # Remove all ** markers from heading
-                        line = line.replace('**', '')
+                        # Remove all bold/italic markers from heading
+                        line = line.replace('**', '').replace('*', '')
                         self.first_line_processed = True
+
+                    # Remove consecutive bold markers: **** -> (empty)
+                    line = re.sub(r'\*\*\*\*', '', line)
+
                     self.markdown_lines.append(line)
 
             # Export tables to xlsx
@@ -556,26 +650,35 @@ class DocxToMarkdown:
         self.extract_all_images()
         print(f"Extracted {len(self.extracted_images)} images\n")
 
+        # Reset image counter for markdown markers (will increment during paragraph processing)
+        self.image_counter = 0
         # Process document
-        image_index = 0
+        self.table_counter = 0  # Track table count for markers
 
         for block in self.iter_block_items(self.doc):
             if isinstance(block, Paragraph):
-                md_text, images_used = self.paragraph_to_markdown(block, image_index)
-                image_index += images_used
+                md_text, images_used = self.paragraph_to_markdown(block, 0)
 
                 if md_text:
                     # Only convert first non-empty line to heading
                     if not self.first_line_processed:
                         md_text = f"# {md_text}"
+                        # Remove all bold/italic markers from heading
+                        md_text = md_text.replace('**', '').replace('*', '')
                         self.first_line_processed = True
 
+                    # Clean up using shared function
+                    md_text = clean_markdown_text(md_text)
                     self.markdown_lines.append(md_text)
 
             elif isinstance(block, Table):
                 # Extract table data for xlsx export
                 table_data = self.table_to_list(block)
                 self.tables_data.append(table_data)
+
+                # Add table marker at the table position
+                self.table_counter += 1
+                self.markdown_lines.append(f"(table-{self.table_counter})")
 
         # Export tables to xlsx
         if self.tables_data:
@@ -596,25 +699,140 @@ class DocxToMarkdown:
 
 
 class PdfToMarkdown:
-    """Convert PDF to Markdown (basic text extraction)."""
+    """Convert PDF to Markdown with text and table extraction."""
 
     def __init__(self, pdf_path: str) -> None:
         self.pdf_path = Path(pdf_path)
+        self.tables_data: list[list[list[str]]] = []
+        self.table_counter = 0
+        self.images_dir = self.pdf_path.parent / "images"
+
+    def extract_tables_with_pdfplumber(self) -> None:
+        """Extract tables from PDF using pdfplumber."""
+        if not PDF_TABLE_SUPPORT:
+            return
+
+        try:
+            import pdfplumber
+        except ImportError:
+            return
+
+        print("  Extracting tables with pdfplumber...")
+        tables_dir = self.pdf_path.parent / "tables"
+        tables_dir.mkdir(exist_ok=True)
+
+        # Get directory name for file naming
+        dir_name = self.pdf_path.parent.name
+
+        try:
+            with pdfplumber.open(self.pdf_path) as pdf:
+                for page_num, page in enumerate(pdf.pages, 1):
+                    tables = page.extract_tables()
+                    if tables:
+                        for table in tables:
+                            # Filter out empty rows and convert to list of lists
+                            table_data = []
+                            for row in tables[0]:
+                                if row and any(cell is not None and str(cell).strip() for cell in row):
+                                    table_data.append([str(cell).strip() if cell is not None else "" for cell in row])
+                            if table_data:
+                                self.tables_data.append(table_data)
+
+        except Exception as e:
+            print(f"  Warning: Could not extract tables with pdfplumber: {e}")
+
+        # Export tables to xlsx
+        if self.tables_data:
+            self._export_tables_to_xlsx(tables_dir, dir_name)
+
+    def _export_tables_to_xlsx(self, tables_dir: Path, dir_name: str) -> None:
+        """Export extracted tables to xlsx files."""
+        try:
+            import openpyxl
+            from openpyxl.styles import Font, Alignment, Border, Side
+        except ImportError:
+            print("  Warning: openpyxl not installed. Skip exporting tables to xlsx.")
+            return
+
+        # Define styles
+        font_normal = Font(name='Arial', size=12)
+        font_bold = Font(name='Arial', size=12, bold=True)
+        alignment_center = Alignment(horizontal='center', vertical='center')
+        thin_border = Border(
+            left=Side(style='thin'),
+            right=Side(style='thin'),
+            top=Side(style='thin'),
+            bottom=Side(style='thin')
+        )
+
+        for idx, table_data in enumerate(self.tables_data, 1):
+            wb = openpyxl.Workbook()
+            ws = wb.active
+
+            for row_idx, row_data in enumerate(table_data, 1):
+                for col_idx, cell_value in enumerate(row_data, 1):
+                    cell = ws.cell(row=row_idx, column=col_idx, value=cell_value)
+                    cell.font = font_normal
+                    cell.alignment = alignment_center
+                    cell.border = thin_border
+
+                    # Header row: bold
+                    if row_idx == 1:
+                        cell.font = font_bold
+
+            # Auto-adjust column widths
+            for col in ws.columns:
+                col_letter = col[0].column_letter
+                max_length = 0
+                for cell in col:
+                    try:
+                        if cell.value:
+                            value_str = str(cell.value)
+                            chinese_chars = sum(1 for c in value_str if '\u4e00' <= c <= '\u9fff')
+                            other_chars = len(value_str) - chinese_chars
+                            length = chinese_chars * 2 + other_chars
+                            max_length = max(max_length, length)
+                    except:
+                        pass
+                adjusted_width = min(max_length + 2, 50)
+                ws.column_dimensions[col_letter].width = adjusted_width
+
+            xlsx_path = tables_dir / f"{dir_name}-table-{idx}.xlsx"
+            wb.save(xlsx_path)
+            print(f"  Saved table: {xlsx_path}")
 
     def convert(self) -> str:
-        """Extract text from PDF."""
+        """Extract text from PDF with table position markers."""
         if not PDF_SUPPORT:
             raise ImportError("pypdf is required for PDF support. Install with: pip install pypdf")
+
+        # First, extract tables to know their positions
+        self.extract_tables_with_pdfplumber()
 
         text_content: list[str] = []
 
         with open(self.pdf_path, 'rb') as f:
             pdf_reader = pypdf.PdfReader(f)
-            for page in pdf_reader.pages:
+            for page_num, page in enumerate(pdf_reader.pages, 1):
                 text = page.extract_text()
-                text_content.append(text)
+                if text and text.strip():
+                    text_content.append(text.strip())
 
-        return '\n\n'.join(text_content)
+                # Add table marker after each page's text
+                # (We add a simple marker; exact positioning would require more complex logic)
+                if self.tables_data:
+                    # For now, add all table markers at the end
+                    pass
+
+        result = '\n\n'.join(text_content)
+
+        # Add table markers at the end (simplified approach)
+        # A more sophisticated version would detect table positions within the text
+        for i in range(len(self.tables_data)):
+            self.table_counter += 1
+            result += f"\n\n(table-{self.table_counter})"
+
+        return result
 
     def save(self) -> Path:
         """Save the markdown file."""
