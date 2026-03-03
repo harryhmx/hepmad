@@ -206,13 +206,38 @@ Usage instructions
 
 ### Git Workflow
 
+**IMPORTANT: Always Navigate to Project Root First**
+
+Before running ANY git commands, ALWAYS change to the project root directory. Git commands must be run from the repository root to ensure correct file paths and status detection.
+
 **Solo Developer Workflow (Recommended for Phase 1):**
 ```bash
-# For most changes: develop directly on main
+# Step 1: Navigate to project root (REQUIRED - prevents path errors)
+cd ~/projects/hepmad
+
+# Step 2: Check status
+git status
+
+# Step 3: Stage changes
 git add .
-git commit -m "feat: add new skill"
+# Or specific files:
+git add README.md .claude/skills/new-skill/
+
+# Step 4: Commit with clear message
+git commit -m "type: brief description"
+
+# Step 5: Push to remote
 git push
 ```
+
+**Commit Message Convention:**
+| Type | Description | Example |
+|------|-------------|---------|
+| `feat` | New feature | `feat: brief description of change` |
+| `fix` | Bug fix | `fix: brief description of bug` |
+| `docs` | Documentation | `docs: brief description of change` |
+| `refactor` | Code refactoring | `refactor: brief description of change` |
+| `test` | Adding tests | `test: brief description of test` |
 
 **When to Use Branches:**
 - Large features (Astro project setup in Phase 2)
@@ -283,8 +308,8 @@ npm run preview
 7. **"Vibe Coding":** Requirements in `docs/` are casual "plain language" specs, not formal documents. Let them evolve naturally.
 
 8. **Always Use Absolute Paths for File Operations:** When using Bash tool to perform operations that modify the filesystem (e.g., `rm`, `mv`, file conversion), ALWAYS use absolute paths. Relative paths depend on current working directory and can lead to mistakes.
-   - ✓ `rm -rf /home/harry/projects/hepmad/demo/bill-tao/math/images`
-   - ✓ `python /home/harry/projects/hepmad/.claude/skills/content-layout-expert/scripts/convert_to_markdown.py /path/to/file.docx`
+   - ✓ `rm -rf ~/projects/hepmad/demo/bill-tao/math/images`
+   - ✓ `python ~/projects/hepmad/.claude/skills/content-layout-expert/scripts/convert_to_markdown.py /path/to/file.docx`
    - ✗ `rm -rf images tables` (unsafe - depends on cwd)
    - ✗ `python convert.py file.docx` (unsafe - depends on cwd)
    - Exception: Read-only commands like `ls`, `cat`, `grep` may use relative paths for convenience when the context is clear.

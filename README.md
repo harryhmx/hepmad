@@ -52,7 +52,8 @@ Agent Skills are reusable skill packages that AI Agents can use out of the box.
 
 | Skill | Description | SKILL.md | Status |
 |-------|-------------|----------|--------|
-| `content-layout-expert` | DOCX/PDF -> Markdown -> HTML conversion | [Link](/.claude/skills/content-layout-expert/SKILL.md) | ✅ Active |
+| `content-layout-expert` | DOCX/PDF -> Markdown -> HTML conversion | [Link](.claude/skills/content-layout-expert/SKILL.md) | ✅ Active |
+| `md-to-pdf` | Markdown -> PDF with Chinese font support | [Link](.claude/skills/md-to-pdf/SKILL.md) | ✅ Active |
 
 ### Skill Structure
 
