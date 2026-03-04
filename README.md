@@ -8,9 +8,7 @@ Serving as the core media platform for online presence.
 
 **Current Phase:** Phase 1 - Infrastructure Building
 
-Focus: Developing Agent Skills, strengthening core skills (math, coding, AI tools).
-
-NOT building the actual website yet - that's Phase 2.
+Focus: MVP Agent Skills complete. Website can now be built using `astro-project-init` and `tailwind-layout-system` skills.
 
 ## Overview
 
@@ -48,7 +46,16 @@ hepmad/
 
 Agent Skills are reusable skill packages that AI Agents can use out of the box.
 
-### Current Skills
+### Hepmad Website Skills (MVP - Created, Awaiting Validation)
+
+| Skill | Description | SKILL.md | Status |
+|-------|-------------|----------|--------|
+| `astro-project-init` | Initialize Astro project with Tailwind CSS and dark theme | [Link](.claude/skills/astro-project-init/SKILL.md) | 📝 Created |
+| `tailwind-layout-system` | Add complete page layouts and blog system | [Link](.claude/skills/tailwind-layout-system/SKILL.md) | 📝 Created |
+
+> **Note:** These skills are created but not yet validated. Validation will occur during actual website development.
+
+### Content Skills
 
 | Skill | Description | SKILL.md | Status |
 |-------|-------------|----------|--------|

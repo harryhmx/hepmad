@@ -160,8 +160,9 @@ Usage instructions
 ## Development Phases
 
 ### Phase 1 (Current): Infrastructure Building
-- Focus: Strengthen core skills, develop Agent Skills
-- NOT building websites or creating content yet
+- 📝 MVP Agent Skills created: `astro-project-init`, `tailwind-layout-system` (awaiting validation)
+- Focus: Strengthen core skills, develop additional Agent Skills
+- Website MVP can now be built using the two skills
 - Agent Skills for: content layout, video editing, image processing, article creation
 - Research: Astro, Next.js, Remotion/Manim tech stacks
 - Support partner projects with existing Agent Skills
@@ -248,7 +249,25 @@ git push
 
 ### Agent Skills Development (Phase 1)
 
+**Current Hepmad Website Skills (MVP - Created, Awaiting Validation):**
+
+| Skill | Purpose | Usage |
+|-------|---------|-------|
+| `astro-project-init` | Initialize Astro project with Tailwind CSS and dark theme | Creates runnable project with minimal Home page |
+| `tailwind-layout-system` | Add complete page layouts and blog system | Adds full Home page, Blog listing, and detail pages |
+
+> **Note:** These skills are created but not yet validated. Validation will occur during actual website development in Phase 2.
+
 **Running Agent Skill Scripts:**
+
+**Bash scripts** (astro-project-init, tailwind-layout-system):
+```bash
+# No virtual environment needed for Bash scripts
+bash ~/projects/hepmad/.claude/skills/astro-project-init/scripts/init.sh hepmad .
+bash ~/projects/hepmad/.claude/skills/tailwind-layout-system/scripts/setup.sh .
+```
+
+**Python scripts** (content-layout-expert, md-to-pdf):
 
 > **IMPORTANT:** Always activate the virtual environment before running any Python script from Agent Skills.
 
@@ -269,9 +288,24 @@ source ~/venv/hepmad/bin/activate && python ~/projects/hepmad/.claude/skills/<sk
 # 3. Iterate by appending with --- separator
 ```
 
-### Website Development (Phase 2 - NOT YET)
+### Website Development (Phase 2 - Ready to Build)
+
+**Quick Start with Agent Skills:**
 ```bash
-# Astro + Tailwind setup (when Phase 2 begins)
+# Step 1: Initialize Astro project with dark theme
+bash ~/projects/hepmad/.claude/skills/astro-project-init/scripts/init.sh hepmad .
+cd hepmad
+npm install
+npm run dev  # Verify project runs
+
+# Step 2: Add complete page layouts and blog system
+bash ~/projects/hepmad/.claude/skills/tailwind-layout-system/scripts/setup.sh .
+npm run dev  # View complete website
+```
+
+**Manual Setup (if needed):**
+```bash
+# Astro + Tailwind setup
 npm create astro@latest
 npx astro add tailwind
 
@@ -293,7 +327,7 @@ npm run preview
 
 ## Important Notes
 
-1. **Phase 1 Focus:** This project is currently in planning/Phase 1. Do NOT start building the actual website yet. Focus on Agent Skills development and research.
+1. **Phase 1 Status:** MVP Agent Skills are complete. You can now use `astro-project-init` and `tailwind-layout-system` to build the Hepmad website.
 
 2. **Git Workflow:** As a solo developer, keep it simple - develop directly on `main` for most changes. Use branches only for large features or when collaborating. Detailed guidelines in `docs/execution-log.md`.
 
