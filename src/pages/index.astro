@@ -4,16 +4,112 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
 <BaseLayout title="Hepmad - Home">
   <!-- Hero Section -->
-  <section class="min-h-[80vh] flex items-center justify-center border-b border-bg-tertiary px-4 sm:px-6 lg:px-8">
-    <div class="mx-auto max-w-4xl text-center">
-      <h1 class="text-5xl font-bold font-serif tracking-tight text-text-primary sm:text-6xl lg:text-7xl">
-        Welcome to Hepmad
+  <section class="border-b border-bg-tertiary px-4 py-24 sm:py-32 sm:px-6 lg:px-8">
+    <div class="mx-auto max-w-5xl text-center">
+      <h1 class="text-5xl font-bold font-serif tracking-tight text-text-primary sm:text-7xl">
+        Hi, I'm Harry
       </h1>
       <p class="mt-8 text-xl leading-relaxed text-text-secondary sm:text-2xl">
-        Your personal brand website is ready. Run <code class="rounded bg-bg-tertiary px-2 py-1 text-accent-blue">npm run dev</code> to start building.
+        Welcome to Hepmad — my personal brand website where I share my life stories,
+        travel experiences, and solo development journey.
       </p>
-      <div class="mt-12 text-text-muted">
-        Use the tailwind-layout-system skill to add full page layouts.
+      <div class="mt-12 flex items-center justify-center gap-x-6">
+        <a href="/blog" class="rounded-md bg-accent-blue px-8 py-3 text-base font-semibold text-bg-primary shadow-sm hover:bg-accent-blue/90 transition-colors">
+          Read My Blog
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section class="px-4 py-20 sm:px-6 lg:px-8" id="about">
+    <div class="mx-auto max-w-4xl">
+      <h2 class="text-3xl font-bold font-serif tracking-tight text-text-primary">About Me</h2>
+      <p class="mt-6 text-lg leading-relaxed text-text-secondary">
+        Hepmad comes from <strong>H</strong>arry + S<strong>ep</strong>tember + No<strong>mad</strong> — a reflection of my journey
+        and aspirations. I'm building a life of freedom, exploration, and continuous growth.
+      </p>
+
+      <h3 class="mt-12 text-2xl font-semibold text-text-primary">Core Values</h3>
+      <ul class="mt-6 space-y-3 text-text-secondary">
+        <li>• <span class="text-accent-gold">Authenticity</span> — Living true to myself</li>
+        <li>• <span class="text-accent-gold">Curiosity</span> — Always learning, always exploring</li>
+        <li>• <span class="text-accent-gold">Freedom</span> — Designing a life of location independence</li>
+        <li>• <span class="text-accent-gold">Creation</span> — Building things that matter</li>
+        <li>• <span class="text-accent-gold">Connection</span> — Sharing stories and experiences</li>
+      </ul>
+
+      <h3 class="mt-12 text-2xl font-semibold text-text-primary">Timeline</h3>
+      <div class="mt-6 space-y-3 text-text-secondary">
+        <p><span class="text-accent-gold font-semibold">2006</span> — First major setback, learned resilience</p>
+        <p><span class="text-accent-gold font-semibold">2007</span> — Moved to Thailand for university, began global journey</p>
+        <p><span class="text-accent-gold font-semibold">2014</span> — Returned to China, started working in Shenzhen</p>
+        <p><span class="text-accent-gold font-semibold">2015-2020</span> — Entrepreneurship attempts in travel industry</p>
+        <p><span class="text-accent-gold font-semibold">2020-2025</span> — Pandemic abroad, exploration and partnerships</p>
+        <p><span class="text-accent-gold font-semibold">2026</span> — Launching Hepmad, committing to the indie developer path</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Blog Section -->
+  <section class="border-t border-bg-tertiary bg-bg-secondary px-4 py-20 sm:px-6 lg:px-8">
+    <div class="mx-auto max-w-5xl">
+      <h2 class="text-3xl font-bold font-serif tracking-tight text-text-primary">Latest from the Blog</h2>
+      <p class="mt-4 text-lg text-text-secondary">
+        I write about three main areas of my life.
+      </p>
+
+      <div class="mt-10 grid gap-6 sm:grid-cols-3">
+        <a href="/blog?category=life-story" class="group rounded-lg border border-bg-tertiary bg-bg-primary p-8 shadow-sm hover:border-accent-gold/50 transition-all hover:shadow-md">
+          <h3 class="text-2xl font-serif font-semibold text-text-primary group-hover:text-accent-gold transition-colors">
+            Life Story
+          </h3>
+          <p class="mt-3 text-sm text-text-secondary">
+            人生母本 — Personal growth and life reflections
+          </p>
+        </a>
+
+        <a href="/blog?category=travel" class="group rounded-lg border border-bg-tertiary bg-bg-primary p-8 shadow-sm hover:border-accent-gold/50 transition-all hover:shadow-md">
+          <h3 class="text-2xl font-serif font-semibold text-text-primary group-hover:text-accent-gold transition-colors">
+            Travel
+          </h3>
+          <p class="mt-3 text-sm text-text-secondary">
+            环球旅行 — Travel stories and global experiences
+          </p>
+        </a>
+
+        <a href="/blog?category=solo-dev" class="group rounded-lg border border-bg-tertiary bg-bg-primary p-8 shadow-sm hover:border-accent-gold/50 transition-all hover:shadow-md">
+          <h3 class="text-2xl font-serif font-semibold text-text-primary group-hover:text-accent-gold transition-colors">
+            Solo Dev
+          </h3>
+          <p class="mt-3 text-sm text-text-secondary">
+            独立开发 — Development logs and behind the scenes
+          </p>
+        </a>
+      </div>
+
+      <div class="mt-10 text-center">
+        <a href="/blog" class="text-accent-blue hover:text-accent-blue/80 transition-colors">
+          View all posts →
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <section class="border-t border-bg-tertiary px-4 py-20 sm:px-6 lg:px-8" id="contact">
+    <div class="mx-auto max-w-4xl text-center">
+      <h2 class="text-3xl font-bold font-serif tracking-tight text-text-primary">Get In Touch</h2>
+      <p class="mt-4 text-lg text-text-secondary">
+        Feel free to reach out via email or connect on social media.
+      </p>
+      <div class="mt-8 flex justify-center space-x-8">
+        <a href="mailto:hello@hepmad.com" class="text-text-secondary hover:text-accent-blue transition-colors">
+          hello@hepmad.com
+        </a>
+        <a href="https://github.com/harryhmx" target="_blank" rel="noopener" class="text-text-secondary hover:text-accent-blue transition-colors">
+          GitHub
+        </a>
       </div>
     </div>
   </section>

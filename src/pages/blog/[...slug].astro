@@ -1,0 +1,46 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  return posts.map(post => ({
+    params: { slug: post.slug },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await post.render();
+---
+
+<BaseLayout title={`${post.data.title} - Hepmad`}>
+  <article class="px-4 py-16 sm:px-6 lg:px-8">
+    <div class="mx-auto max-w-3xl">
+      <!-- Back link -->
+      <a href="/blog" class="text-accent-blue hover:text-accent-blue/80 transition-colors">
+        ← Back to Blog
+      </a>
+
+      <!-- Header -->
+      <header class="mt-8">
+        <h1 class="text-4xl font-bold font-serif tracking-tight text-text-primary sm:text-5xl">
+          {post.data.title}
+        </h1>
+        <div class="mt-4 flex flex-wrap gap-4 text-sm text-text-muted">
+          <time>{post.data.date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</time>
+          <span>·</span>
+          <span>{post.data.category.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())}</span>
+        </div>
+        <p class="mt-6 text-xl text-text-secondary">
+          {post.data.description}
+        </p>
+      </header>
+
+      <!-- Content -->
+      <div class="mt-12 prose prose-invert prose-lg max-w-none">
+        <Content />
+      </div>
+    </div>
+  </article>
+</BaseLayout>

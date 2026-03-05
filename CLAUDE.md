@@ -15,7 +15,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **Current Phase:** Phase 2 - Website Development
 - Focus: Building Hepmad official website (Astro + Tailwind)
-- Astro project initialized with basic Home page and "Late Night Flight" dark theme
+- Website MVP complete with full layouts and blog system
+- Content refinement in progress
 
 **Repository:** https://github.com/harryhmx/hepmad
 
@@ -25,8 +26,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 hepmad/                              # Root directory IS the Astro website
 ├── src/                             # Astro source code
 │   ├── components/                  # Components (Navbar, Footer)
+│   ├── content/                     # Blog posts (Markdown)
+│   │   └── blog/                    # life-story/, travel/, solo-dev/
 │   ├── layouts/                     # Page layouts (BaseLayout)
-│   ├── pages/                       # Routes (index.astro, blog/*.astro)
+│   ├── pages/                       # Routes (index.astro, blog.astro, blog/[...slug].astro)
 │   └── styles/                      # Global styles (global.css)
 ├── public/                          # Static assets (favicon, images)
 │
@@ -166,12 +169,15 @@ Usage instructions
 
 ### Phase 1 (Complete): Infrastructure Building
 - ✅ MVP Agent Skills created and validated: `astro-project-init`, `tailwind-layout-system`
-- Website infrastructure ready
+- Both skills now Active and production-ready
 
 ### Phase 2 (Current): Development & Creation
-- Build Hepmad official website MVP (Astro + Tailwind)
-- Refactor RBH website (Next.js + Tailwind)
-- Use Agent Skills for efficient content creation and video production
+- ✅ Hepmad website MVP complete (Astro + Tailwind)
+  - Full layouts: Home, Blog listing, Blog detail
+  - Content Collections with 3 pillars: life-story, travel, solo-dev
+  - "Late Night Flight" dark theme
+- 🔄 Content refinement in progress
+- ⏳ Refactor RBH website (Next.js + Tailwind)
 
 ### Phase 3: AI Agent System Development
 - Develop AI Agent System MVP

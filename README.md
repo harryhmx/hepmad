@@ -8,7 +8,7 @@ Serving as the core media platform for online presence.
 
 **Current Phase:** Phase 2 - Website Development
 
-Astro project initialized with Tailwind CSS. Basic Home page with "Late Night Flight" dark theme live.
+Astro website live with complete layouts and blog system. Content refinement in progress.
 
 ## Overview
 
@@ -28,8 +28,10 @@ hepmad/
 │   └── skills/              # Agent Skills
 ├── src/
 │   ├── components/          # Navbar, Footer
+│   ├── content/             # Blog posts (Markdown)
+│   │   └── blog/            # life-story, travel, solo-dev
 │   ├── layouts/             # BaseLayout
-│   ├── pages/               # index.astro
+│   ├── pages/               # index.astro, blog.astro, blog/[...slug].astro
 │   └── styles/              # global.css
 ├── public/                  # Static assets
 ├── docs/                    # Local docs (gitignored)
@@ -54,12 +56,12 @@ hepmad/
 
 Agent Skills are reusable skill packages that AI Agents can use out of the box.
 
-### Hepmad Website Skills (MVP - Created, Awaiting Validation)
+### Hepmad Website Skills
 
 | Skill | Description | SKILL.md | Status |
 |-------|-------------|----------|--------|
-| `astro-project-init` | Initialize Astro project with Tailwind CSS + dark theme | [Link](.claude/skills/astro-project-init/SKILL.md) | ✅ Validated |
-| `tailwind-layout-system` | Add complete page layouts + blog system | [Link](.claude/skills/tailwind-layout-system/SKILL.md) | 📝 Ready |
+| `astro-project-init` | Initialize Astro project with Tailwind CSS + dark theme | [Link](.claude/skills/astro-project-init/SKILL.md) | ✅ Active |
+| `tailwind-layout-system` | Add complete page layouts + blog system | [Link](.claude/skills/tailwind-layout-system/SKILL.md) | ✅ Active |
 
 ### Content Skills
 
