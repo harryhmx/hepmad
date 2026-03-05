@@ -13,27 +13,32 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - Bilingual website (English default, Chinese supplementary), targeting global users with priority on overseas audiences
 - Foundation for independent products (DSP - Digital Skill Products, partnerships)
 
-**Current Phase:** Phase 1 - Infrastructure Building
-- Focus: Developing Agent Skills, strengthening core skills (math, coding, AI tools)
-- NOT building the actual website yet (that's Phase 2)
+**Current Phase:** Phase 2 - Website Development
+- Focus: Building Hepmad official website (Astro + Tailwind)
+- Astro project initialized with basic Home page and "Late Night Flight" dark theme
 
 **Repository:** https://github.com/harryhmx/hepmad
 
 ## Project Structure
 
 ```
-hepmad/                              # Root directory IS the website (will be Astro project)
-├── docs/                            # Local documentation (gitignored)
-│   ├── project_roadmap.md           # Overall project roadmap - READ FIRST for context
-│   ├── init_website_project.md      # Detailed website requirements and tech stack
-│   └── create-*-skill.md            # Agent Skills "plain language" specs (drafts, iterative)
+hepmad/                              # Root directory IS the Astro website
+├── src/                             # Astro source code
+│   ├── components/                  # Components (Navbar, Footer)
+│   ├── layouts/                     # Page layouts (BaseLayout)
+│   ├── pages/                       # Routes (index.astro, blog/*.astro)
+│   └── styles/                      # Global styles (global.css)
+├── public/                          # Static assets (favicon, images)
 │
 ├── .claude/
-│   └── skills/                      # Hepmad + HarryMath related Skills ONLY (committed to Git)
+│   └── skills/                      # Hepmad + HarryMath related Skills ONLY
+│
+├── docs/                            # Local documentation (gitignored)
 │
 ├── demo/                            # Demo files (gitignored)
 │
-└── [website code...]                # Astro + Tailwind project (Phase 2 - NOT YET CREATED)
+├── astro.config.mjs                 # Astro configuration
+└── tailwind.config.mjs              # Tailwind + theme configuration
 ```
 
 **Key Directories:**
@@ -159,15 +164,11 @@ Usage instructions
 
 ## Development Phases
 
-### Phase 1 (Current): Infrastructure Building
-- 📝 MVP Agent Skills created: `astro-project-init`, `tailwind-layout-system` (awaiting validation)
-- Focus: Strengthen core skills, develop additional Agent Skills
-- Website MVP can now be built using the two skills
-- Agent Skills for: content layout, video editing, image processing, article creation
-- Research: Astro, Next.js, Remotion/Manim tech stacks
-- Support partner projects with existing Agent Skills
+### Phase 1 (Complete): Infrastructure Building
+- ✅ MVP Agent Skills created and validated: `astro-project-init`, `tailwind-layout-system`
+- Website infrastructure ready
 
-### Phase 2: Development & Creation
+### Phase 2 (Current): Development & Creation
 - Build Hepmad official website MVP (Astro + Tailwind)
 - Refactor RBH website (Next.js + Tailwind)
 - Use Agent Skills for efficient content creation and video production
@@ -249,14 +250,14 @@ git push
 
 ### Agent Skills Development (Phase 1)
 
-**Current Hepmad Website Skills (MVP - Created, Awaiting Validation):**
+**Current Hepmad Website Skills (MVP - Validated):**
 
 | Skill | Purpose | Usage |
 |-------|---------|-------|
-| `astro-project-init` | Initialize Astro project with Tailwind CSS and dark theme | Creates runnable project with minimal Home page |
+| `astro-project-init` | Initialize Astro project with Tailwind CSS + dark theme | Creates runnable project with minimal Home page |
 | `tailwind-layout-system` | Add complete page layouts and blog system | Adds full Home page, Blog listing, and detail pages |
 
-> **Note:** These skills are created but not yet validated. Validation will occur during actual website development in Phase 2.
+> **Status:** Both skills validated and ready for use.
 
 **Running Agent Skill Scripts:**
 

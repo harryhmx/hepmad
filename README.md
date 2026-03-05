@@ -6,9 +6,9 @@ Serving as the core media platform for online presence.
 
 ## Project Status
 
-**Current Phase:** Phase 1 - Infrastructure Building
+**Current Phase:** Phase 2 - Website Development
 
-Focus: MVP Agent Skills complete. Website can now be built using `astro-project-init` and `tailwind-layout-system` skills.
+Astro project initialized with Tailwind CSS. Basic Home page with "Late Night Flight" dark theme live.
 
 ## Overview
 
@@ -25,20 +25,28 @@ Hepmad is Harry's personal brand platform built on three content pillars:
 ```
 hepmad/
 ├── .claude/
-│   └── skills/              # Hepmad + HarryMath related Agent Skills
-├── CLAUDE.md                # Project guidelines and persistent memory
-├── .gitignore               # Git ignore rules
-└── [website code...]        # Astro + Tailwind project (Phase 2 - NOT YET)
+│   └── skills/              # Agent Skills
+├── src/
+│   ├── components/          # Navbar, Footer
+│   ├── layouts/             # BaseLayout
+│   ├── pages/               # index.astro
+│   └── styles/              # global.css
+├── public/                  # Static assets
+├── docs/                    # Local docs (gitignored)
+├── demo/                    # Demo files (gitignored)
+├── CLAUDE.md                # Project guidelines
+├── astro.config.mjs         # Astro config
+└── tailwind.config.mjs      # Tailwind + theme
 ```
 
 **Note:** `docs/` and `demo/` directories are gitignored - they contain local planning docs and test files.
 
-## Tech Stack (Planned for Phase 2)
+## Tech Stack
 
-- **Framework:** Astro (latest version)
-- **Styling:** Tailwind CSS
+- **Framework:** Astro 4.16+ (content-first, zero JS by default)
+- **Styling:** Tailwind CSS 3.4+ with "Late Night Flight" dark theme
 - **Content:** Markdown / MDX
-- **i18n:** Astro built-in i18n (English default)
+- **i18n:** Astro built-in i18n (English default, Chinese supplementary)
 - **Deployment:** Cloudflare Pages (primary) / Netlify (backup)
 - **Domain:** hepmad.com
 
@@ -50,10 +58,8 @@ Agent Skills are reusable skill packages that AI Agents can use out of the box.
 
 | Skill | Description | SKILL.md | Status |
 |-------|-------------|----------|--------|
-| `astro-project-init` | Initialize Astro project with Tailwind CSS and dark theme | [Link](.claude/skills/astro-project-init/SKILL.md) | 📝 Created |
-| `tailwind-layout-system` | Add complete page layouts and blog system | [Link](.claude/skills/tailwind-layout-system/SKILL.md) | 📝 Created |
-
-> **Note:** These skills are created but not yet validated. Validation will occur during actual website development.
+| `astro-project-init` | Initialize Astro project with Tailwind CSS + dark theme | [Link](.claude/skills/astro-project-init/SKILL.md) | ✅ Validated |
+| `tailwind-layout-system` | Add complete page layouts + blog system | [Link](.claude/skills/tailwind-layout-system/SKILL.md) | 📝 Ready |
 
 ### Content Skills
 
@@ -82,8 +88,8 @@ xxx-skill/
 
 | Phase | Focus | Status |
 |-------|-------|--------|
-| **Phase 1** | Infrastructure Building - Agent Skills development | 🔄 Current |
-| **Phase 2** | Website Development - Build Hepmad & RBH websites | ⏳ Planned |
+| **Phase 1** | Infrastructure - Agent Skills development | ✅ Complete |
+| **Phase 2** | Website - Build Hepmad & RBH websites | 🔄 Current |
 | **Phase 3** | AI Agent System Development | ⏳ Planned |
 | **Phase 4** | Global Travel & Content Creation | ⏳ Planned |
 | **Phase 5** | Maturation & Optimization | ⏳ Planned |
