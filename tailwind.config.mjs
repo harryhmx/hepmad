@@ -5,20 +5,20 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Late Night Flight - Dark Theme
+        // Use CSS variables for dynamic theme switching
         bg: {
-          primary: '#0F1117',   // Main background - near black with blue tint
-          secondary: '#1A1D27', // Card/section backgrounds
-          tertiary: '#2A2E3D',  // Dividers
+          primary: 'var(--bg-primary)',
+          secondary: 'var(--bg-secondary)',
+          tertiary: 'var(--bg-tertiary)',
         },
         text: {
-          primary: '#E8E6E1',   // Main text - off-white
-          secondary: '#8B8FA8', // Secondary text - gray-blue
-          muted: '#6B7280',     // Muted text
+          primary: 'var(--text-primary)',
+          secondary: 'var(--text-secondary)',
+          muted: 'var(--text-muted)',
         },
         accent: {
-          gold: '#C9A84C',      // Accent - warm gold
-          blue: '#5B8FD4',      // Links/CTA - soft blue
+          gold: 'var(--accent-gold)',
+          blue: 'var(--accent-blue)',
         },
       },
       fontFamily: {

@@ -15,7 +15,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **Current Phase:** Phase 2 - Website Development
 - Focus: Building Hepmad official website (Astro + Tailwind)
-- Website MVP complete with full layouts and blog system
+- Website MVP complete with full layouts, blog system, and responsive design
+- Theme system (light/dark mode) implemented
 - Content refinement in progress
 
 **Repository:** https://github.com/harryhmx/hepmad
@@ -55,13 +56,13 @@ hepmad/                              # Root directory IS the Astro website
 - `~/projects/really-brave-hearts/` - RBH refactor (Next.js - Phase 2)
 - `~/projects/[ai-agent-system]/` - AI Agent System (Phase 3 - to be created)
 
-## Tech Stack (Planned for Phase 2)
+## Tech Stack (Phase 2 - Current)
 
 ### Hepmad Official Website
 ```yaml
-Framework: Astro (latest version)
-Styling: Tailwind CSS
-Content: Markdown / MDX
+Framework: Astro 4.16+
+Styling: Tailwind CSS 3.4+ with custom theme variables
+Content: Markdown / MDX with Content Collections
 i18n: Astro built-in i18n (English default)
 Deployment: Cloudflare Pages (primary) / Netlify (backup)
 Domain: hepmad.com
@@ -72,6 +73,17 @@ Domain: hepmad.com
 - Built-in i18n support for bilingual content
 - Lightweight, pure static output
 - Cloudflare Pages: excellent overseas access, good domestic access, unlimited free bandwidth
+
+**Implemented Features:**
+- ✅ Responsive navigation with hamburger menu (mobile-friendly)
+- ✅ Light/dark theme toggle (light mode default, localStorage persistence)
+- ✅ Custom color scheme:
+  - Navbar: Purple (Passion theme-inspired) - `#5d3478` (light) / `#8a4eb1` (dark)
+  - Footer: Blue-teal - `#0e7490` (light) / `#164e63` (dark)
+  - Accent: Gold - `#d97706` (light) / `#C9A84C` (dark)
+- ✅ Blog category filtering with dynamic routes (`/blog/{category}`)
+- ✅ Sticky footer (always fixed at bottom using flexbox)
+- ✅ CSS variables for dynamic theme switching
 
 ### Other Projects
 - **HarryMath**: Hexo (existing), hosted on GitHub Pages

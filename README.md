@@ -46,11 +46,27 @@ hepmad/
 ## Tech Stack
 
 - **Framework:** Astro 4.16+ (content-first, zero JS by default)
-- **Styling:** Tailwind CSS 3.4+ with "Late Night Flight" dark theme
+- **Styling:** Tailwind CSS 3.4+ with custom theme
 - **Content:** Markdown / MDX
 - **i18n:** Astro built-in i18n (English default, Chinese supplementary)
 - **Deployment:** Cloudflare Pages (primary) / Netlify (backup)
 - **Domain:** hepmad.com
+
+## Features
+
+### UI/UX
+- ✅ **Responsive Design:** Mobile-friendly navigation with hamburger menu
+- ✅ **Theme Switching:** Light/dark mode toggle (light mode default)
+- ✅ **Custom Color Scheme:**
+  - Navbar: Purple (Passion theme-inspired)
+  - Footer: Blue-teal
+  - Accent colors: Gold and Blue
+- ✅ **Sticky Footer:** Footer always fixed at bottom
+
+### Content
+- ✅ **Blog System:** Category-based filtering (life-story, travel, solo-dev)
+- ✅ **Dynamic Routes:** Static generation for all blog categories
+- ✅ **Content Collections:** Organized blog structure
 
 ## Agent Skills
 
