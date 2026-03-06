@@ -1,6 +1,24 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
+
+// Generate static paths for each category
+export function getStaticPaths() {
+  return [
+    { params: { category: 'life-story' } },
+    { params: { category: 'travel' } },
+    { params: { category: 'solo-dev' } },
+  ];
+}
+
+// Get the category from the URL
+const { category } = Astro.params;
+
+// Validate category
+const validCategories = ['life-story', 'travel', 'solo-dev'];
+if (!validCategories.includes(category)) {
+  return Astro.redirect('/404');
+}
 
 // Get all blog posts
 const allPosts = await getCollection('blog');
@@ -10,38 +28,45 @@ const sortedPosts = allPosts.sort((a, b) =>
   b.data.date.valueOf() - a.data.date.valueOf()
 );
 
-// Display all posts (this page shows everything)
-const displayPosts = sortedPosts;
+// Filter posts by category
+const displayPosts = sortedPosts.filter(post => post.data.category === category);
+
+// Category display names
+const categoryNames: Record<string, string> = {
+  'life-story': 'Life Story',
+  'travel': 'Travel',
+  'solo-dev': 'Solo Dev',
+};
 ---
 
-<BaseLayout title="Hepmad - Blog">
+<BaseLayout title={`Hepmad - ${categoryNames[category]}`}>
   <div class="px-4 py-16 sm:px-6 lg:px-8">
     <div class="mx-auto max-w-4xl">
-      <h1 class="text-4xl font-bold font-serif tracking-tight text-text-primary">Blog</h1>
+      <h1 class="text-4xl font-bold font-serif tracking-tight text-text-primary">{categoryNames[category]}</h1>
 
       <!-- Category Filter -->
       <div class="mt-10 flex flex-wrap gap-3">
         <a
           href="/blog"
-          class="rounded-md bg-accent-blue px-5 py-2 text-bg-primary"
+          class="rounded-md border border-bg-tertiary px-5 py-2 text-text-secondary hover:border-accent-gold/50 hover:text-text-primary transition-all"
         >
           All
         </a>
         <a
           href="/blog/life-story"
-          class="rounded-md border border-bg-tertiary px-5 py-2 text-text-secondary hover:border-accent-gold/50 hover:text-text-primary transition-all"
+          class={category === 'life-story' ? 'rounded-md bg-accent-blue px-5 py-2 text-bg-primary' : 'rounded-md border border-bg-tertiary px-5 py-2 text-text-secondary hover:border-accent-gold/50 hover:text-text-primary transition-all'}
         >
           Life Story
         </a>
         <a
           href="/blog/travel"
-          class="rounded-md border border-bg-tertiary px-5 py-2 text-text-secondary hover:border-accent-gold/50 hover:text-text-primary transition-all"
+          class={category === 'travel' ? 'rounded-md bg-accent-blue px-5 py-2 text-bg-primary' : 'rounded-md border border-bg-tertiary px-5 py-2 text-text-secondary hover:border-accent-gold/50 hover:text-text-primary transition-all'}
         >
           Travel
         </a>
         <a
           href="/blog/solo-dev"
-          class="rounded-md border border-bg-tertiary px-5 py-2 text-text-secondary hover:border-accent-gold/50 hover:text-text-primary transition-all"
+          class={category === 'solo-dev' ? 'rounded-md bg-accent-blue px-5 py-2 text-bg-primary' : 'rounded-md border border-bg-tertiary px-5 py-2 text-text-secondary hover:border-accent-gold/50 hover:text-text-primary transition-all'}
         >
           Solo Dev
         </a>

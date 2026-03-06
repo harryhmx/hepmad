@@ -1,18 +1,97 @@
 ---
 ---
 
-<nav class="border-b border-bg-tertiary bg-bg-primary">
+<script define:vars={{ menuId: 'mobile-menu', buttonId: 'menu-button' }}>
+  let isOpen = false;
+
+  function toggleMenu() {
+    const menu = document.getElementById(menuId);
+    const button = document.getElementById(buttonId);
+    const iconOpen = button?.querySelector('.icon-open');
+    const iconClose = button?.querySelector('.icon-close');
+
+    isOpen = !isOpen;
+
+    // Toggle menu visibility
+    if (menu) {
+      menu.classList.toggle('hidden');
+    }
+
+    // Toggle icons
+    if (iconOpen && iconClose) {
+      iconOpen.classList.toggle('hidden');
+      iconClose.classList.toggle('hidden');
+    }
+
+    // Update aria-expanded
+    if (button) {
+      button.setAttribute('aria-expanded', isOpen.toString());
+    }
+  }
+
+  // Expose function globally
+  window.toggleMenu = toggleMenu;
+</script>
+
+<nav class="border-b border-bg-tertiary bg-bg-primary sticky top-0 z-50">
   <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
     <div class="flex h-16 justify-between">
+      <!-- Logo -->
       <div class="flex">
         <a href="/" class="flex flex-shrink-0 items-center">
           <span class="text-xl font-bold font-serif text-text-primary">Hepmad</span>
         </a>
       </div>
-      <div class="flex items-center space-x-8">
+
+      <!-- Desktop Menu -->
+      <div class="hidden md:flex items-center space-x-8">
         <a href="/" class="text-text-secondary hover:text-text-primary transition-colors">Home</a>
         <a href="/blog" class="text-text-secondary hover:text-text-primary transition-colors">Blog</a>
       </div>
+
+      <!-- Mobile Menu Button -->
+      <div class="flex items-center md:hidden">
+        <button
+          id="menu-button"
+          type="button"
+          onclick="toggleMenu()"
+          class="inline-flex items-center justify-center rounded-md p-2 text-text-secondary hover:text-text-primary hover:bg-bg-secondary transition-colors"
+          aria-controls="mobile-menu"
+          aria-expanded="false"
+        >
+          <span class="sr-only">Open main menu</span>
+
+          <!-- Hamburger Icon (shown when closed) -->
+          <svg class="icon-open block h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+          </svg>
+
+          <!-- Close Icon X (hidden by default) -->
+          <svg class="icon-close hidden h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile Menu (hidden by default) -->
+  <div class="hidden md:hidden" id="mobile-menu">
+    <div class="border-t border-bg-tertiary bg-bg-primary px-2 pt-2 pb-3 space-y-1">
+      <a
+        href="/"
+        onclick="toggleMenu()"
+        class="block rounded-md px-3 py-2 text-base font-medium text-text-secondary hover:text-text-primary hover:bg-bg-secondary transition-colors"
+      >
+        Home
+      </a>
+      <a
+        href="/blog"
+        onclick="toggleMenu()"
+        class="block rounded-md px-3 py-2 text-base font-medium text-text-secondary hover:text-text-primary hover:bg-bg-secondary transition-colors"
+      >
+        Blog
+      </a>
     </div>
   </div>
 </nav>
