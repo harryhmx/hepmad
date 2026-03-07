@@ -20,6 +20,19 @@
   --navbar-logo: #f9e75e;
   --navbar-link: #f9a55f;
 
+  /* Blog card background - Passion theme gold */
+  --blog-card-bg: #fbd974;
+
+  /* Blog card title - Passion theme */
+  --card-title-color: #28407f;
+
+  /* Category tag colors */
+  --tag-border: #9ca3af;
+  --tag-bg-active: #fda4af;
+  --tag-text-active: #881337;
+  --tag-bg-inactive: #f3f4f6;
+  --tag-text-inactive: #6b7280;
+
   /* Footer colors - Deep blue-teal for contrast with purple navbar */
   --footer-bg: #0e7490;
   --footer-text: #f0f9ff;
@@ -42,6 +55,19 @@
   --navbar-bg: #8a4eb1;
   --navbar-logo: #d4c44f;
   --navbar-link: #d48547;
+
+  /* Blog card background - Dark mode */
+  --blog-card-bg: #5d512c;
+
+  /* Blog card title - Dark mode */
+  --card-title-color: #7a8bc4;
+
+  /* Category tag colors - Dark mode */
+  --tag-border: #9ca3af;
+  --tag-bg-active: #be123c;
+  --tag-text-active: #fce7f3;
+  --tag-bg-inactive: #374151;
+  --tag-text-inactive: #d1d5db;
 
   /* Footer colors - Dark mode */
   --footer-bg: #164e63;

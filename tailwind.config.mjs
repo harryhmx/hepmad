@@ -20,6 +20,17 @@ export default {
           gold: 'var(--accent-gold)',
           blue: 'var(--accent-blue)',
         },
+        'blog-card': {
+          bg: 'var(--blog-card-bg)',
+          title: 'var(--card-title-color)',
+        },
+        tag: {
+          border: 'var(--tag-border)',
+          'bg-active': 'var(--tag-bg-active)',
+          'text-active': 'var(--tag-text-active)',
+          'bg-inactive': 'var(--tag-bg-inactive)',
+          'text-inactive': 'var(--tag-text-inactive)',
+        },
       },
       fontFamily: {
         serif: ['"Playfair Display"', 'serif'],

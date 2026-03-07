@@ -6,7 +6,7 @@ import { getCollection } from 'astro:content';
 export function getStaticPaths() {
   return [
     { params: { category: 'life-story' } },
-    { params: { category: 'travel' } },
+    { params: { category: 'global-travel' } },
     { params: { category: 'solo-dev' } },
   ];
 }
@@ -15,7 +15,7 @@ export function getStaticPaths() {
 const { category } = Astro.params;
 
 // Validate category
-const validCategories = ['life-story', 'travel', 'solo-dev'];
+const validCategories = ['life-story', 'global-travel', 'solo-dev'];
 if (!validCategories.includes(category)) {
   return Astro.redirect('/404');
 }
@@ -34,7 +34,7 @@ const displayPosts = sortedPosts.filter(post => post.data.category === category)
 // Category display names
 const categoryNames: Record<string, string> = {
   'life-story': 'Life Story',
-  'travel': 'Travel',
+  'global-travel': 'Global Travel',
   'solo-dev': 'Solo Dev',
 };
 ---
@@ -48,25 +48,25 @@ const categoryNames: Record<string, string> = {
       <div class="mt-10 flex flex-wrap gap-3">
         <a
           href="/blog"
-          class="rounded-md border border-bg-tertiary px-5 py-2 text-text-secondary hover:border-accent-gold/50 hover:text-text-primary transition-all"
+          class="rounded-md bg-tag-bg-inactive px-5 py-2 text-tag-text-inactive border-2 border-tag-border hover:text-text-primary font-medium transition-all"
         >
           All
         </a>
         <a
           href="/blog/life-story"
-          class={category === 'life-story' ? 'rounded-md bg-accent-blue px-5 py-2 text-bg-primary' : 'rounded-md border border-bg-tertiary px-5 py-2 text-text-secondary hover:border-accent-gold/50 hover:text-text-primary transition-all'}
+          class={category === 'life-story' ? 'rounded-md bg-tag-bg-active px-5 py-2 text-tag-text-active border-2 border-tag-border font-medium transition-all' : 'rounded-md bg-tag-bg-inactive px-5 py-2 text-tag-text-inactive border-2 border-tag-border hover:text-text-primary font-medium transition-all'}
         >
           Life Story
         </a>
         <a
-          href="/blog/travel"
-          class={category === 'travel' ? 'rounded-md bg-accent-blue px-5 py-2 text-bg-primary' : 'rounded-md border border-bg-tertiary px-5 py-2 text-text-secondary hover:border-accent-gold/50 hover:text-text-primary transition-all'}
+          href="/blog/global-travel"
+          class={category === 'global-travel' ? 'rounded-md bg-tag-bg-active px-5 py-2 text-tag-text-active border-2 border-tag-border font-medium transition-all' : 'rounded-md bg-tag-bg-inactive px-5 py-2 text-tag-text-inactive border-2 border-tag-border hover:text-text-primary font-medium transition-all'}
         >
-          Travel
+          Global Travel
         </a>
         <a
           href="/blog/solo-dev"
-          class={category === 'solo-dev' ? 'rounded-md bg-accent-blue px-5 py-2 text-bg-primary' : 'rounded-md border border-bg-tertiary px-5 py-2 text-text-secondary hover:border-accent-gold/50 hover:text-text-primary transition-all'}
+          class={category === 'solo-dev' ? 'rounded-md bg-tag-bg-active px-5 py-2 text-tag-text-active border-2 border-tag-border font-medium transition-all' : 'rounded-md bg-tag-bg-inactive px-5 py-2 text-tag-text-inactive border-2 border-tag-border hover:text-text-primary font-medium transition-all'}
         >
           Solo Dev
         </a>
@@ -85,7 +85,7 @@ const categoryNames: Record<string, string> = {
                 </a>
               </h2>
               <p class="mt-2 text-sm text-text-muted">
-                {post.data.date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })} · {post.data.category.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                {post.data.date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })} · {categoryNames[post.data.category] || post.data.category.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())}
               </p>
               <p class="mt-3 text-text-secondary">
                 {post.data.description}

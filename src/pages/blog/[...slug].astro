@@ -12,6 +12,13 @@ export async function getStaticPaths() {
 
 const { post } = Astro.props;
 const { Content } = await post.render();
+
+// Category display names
+const categoryNames: Record<string, string> = {
+  'life-story': 'Life Story',
+  'global-travel': 'Global Travel',
+  'solo-dev': 'Solo Dev',
+};
 ---
 
 <BaseLayout title={`${post.data.title} - Hepmad`}>
@@ -30,7 +37,7 @@ const { Content } = await post.render();
         <div class="mt-4 flex flex-wrap gap-4 text-sm text-text-muted">
           <time>{post.data.date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</time>
           <span>·</span>
-          <span>{post.data.category.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())}</span>
+          <span>{categoryNames[post.data.category] || post.data.category}</span>
         </div>
         <p class="mt-6 text-xl text-text-secondary">
           {post.data.description}

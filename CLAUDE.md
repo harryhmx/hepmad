@@ -9,14 +9,15 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **Goal:**
 - Personal brand website serving as the core media platform for Harry's online presence
-- Three content pillars: Life Story (人生母本), Travel (环球旅行), Solo Dev (独立开发)
+- Three content pillars: Life Story (成长轨迹), Global Travel (环球旅行), Solo Dev (独立开发)
 - Bilingual website (English default, Chinese supplementary), targeting global users with priority on overseas audiences
 - Foundation for independent products (DSP - Digital Skill Products, partnerships)
 
-**Current Phase:** Phase 2 - Website Development
+**Current Phase:** Phase 2 - Website Development ✅ Complete
 - Focus: Building Hepmad official website (Astro + Tailwind)
-- Website MVP complete with full layouts, blog system, and responsive design
+- Website MVP complete with full layouts, blog system, responsive design, and Passion theme styling
 - Theme system (light/dark mode) implemented
+- **Live at:** https://hepmad.com
 - Content refinement in progress
 
 **Repository:** https://github.com/harryhmx/hepmad
@@ -28,7 +29,7 @@ hepmad/                              # Root directory IS the Astro website
 ├── src/                             # Astro source code
 │   ├── components/                  # Components (Navbar, Footer)
 │   ├── content/                     # Blog posts (Markdown)
-│   │   └── blog/                    # life-story/, travel/, solo-dev/
+│   │   └── blog/                    # life-story/, global-travel/, solo-dev/
 │   ├── layouts/                     # Page layouts (BaseLayout)
 │   ├── pages/                       # Routes (index.astro, blog.astro, blog/[...slug].astro)
 │   └── styles/                      # Global styles (global.css)
@@ -80,8 +81,11 @@ Domain: hepmad.com
 - ✅ Custom color scheme:
   - Navbar: Purple (Passion theme-inspired) - `#5d3478` (light) / `#8a4eb1` (dark)
   - Footer: Blue-teal - `#0e7490` (light) / `#164e63` (dark)
-  - Accent: Gold - `#d97706` (light) / `#C9A84C` (dark)
+  - Blog Card Background: Gold - `#fbd974` (light) / `#5d512c` (dark)
+  - Blog Card Title: Blue - `#28407f` (light) / `#7a8bc4` (dark)
+  - Category Tags: Pink/gray scheme with enhanced border contrast
 - ✅ Blog category filtering with dynamic routes (`/blog/{category}`)
+- ✅ Content categories: life-story, global-travel, solo-dev
 - ✅ Sticky footer (always fixed at bottom using flexbox)
 - ✅ CSS variables for dynamic theme switching
 

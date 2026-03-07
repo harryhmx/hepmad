@@ -3,7 +3,7 @@ title: "Surviving the Pandemic Abroad: 18 Months in 5 Countries"
 description: "How I navigated lockdowns, border closures, and uncertainty while living overseas."
 date: 2026-01-15
 lang: en
-category: travel
+category: global-travel
 ---
 
 When the pandemic hit, I wasn't home. I was abroad, with no clear path back and an uncertain future.

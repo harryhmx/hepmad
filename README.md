@@ -6,9 +6,7 @@ Serving as the core media platform for online presence.
 
 ## Project Status
 
-**Current Phase:** Phase 2 - Website Development
-
-Astro website live with complete layouts and blog system. Content refinement in progress.
+**Current Phase:** Phase 2 - Website Development ✅ Complete
 
 ## Overview
 
@@ -16,8 +14,8 @@ Hepmad is Harry's personal brand platform built on three content pillars:
 
 | Pillar | Content Focus |
 |--------|---------------|
-| **Life Story** (人生母本) | Systematic record of growth and daily life |
-| **Travel** (环球旅行) | Travel stories, photos, maps, living abroad |
+| **Life Story** (成长轨迹) | Systematic record of growth and daily life |
+| **Global Travel** (环球旅行) | Travel stories, photos, maps, living abroad |
 | **Solo Dev** (独立开发) | Development logs, thoughts, behind-the-scenes |
 
 ## Project Structure
@@ -29,7 +27,7 @@ hepmad/
 ├── src/
 │   ├── components/          # Navbar, Footer
 │   ├── content/             # Blog posts (Markdown)
-│   │   └── blog/            # life-story, travel, solo-dev
+│   │   └── blog/            # life-story, global-travel, solo-dev
 │   ├── layouts/             # BaseLayout
 │   ├── pages/               # index.astro, blog.astro, blog/[...slug].astro
 │   └── styles/              # global.css
@@ -64,9 +62,10 @@ hepmad/
 - ✅ **Sticky Footer:** Footer always fixed at bottom
 
 ### Content
-- ✅ **Blog System:** Category-based filtering (life-story, travel, solo-dev)
+- ✅ **Blog System:** Category-based filtering (life-story, global-travel, solo-dev)
 - ✅ **Dynamic Routes:** Static generation for all blog categories
-- ✅ **Content Collections:** Organized blog structure
+- ✅ **Content Collections:** Organized blog structure with Zod schema validation
+- ✅ **Category Tags:** Styled with pink/gray color scheme and enhanced border contrast
 
 ## Agent Skills
 
