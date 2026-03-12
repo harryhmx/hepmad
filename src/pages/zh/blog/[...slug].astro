@@ -1,12 +1,12 @@
 ---
 import { getCollection } from 'astro:content';
-import BaseLayout from '../../layouts/BaseLayout.astro';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog');
-  // Only generate paths for English posts
-  const enPosts = posts.filter(post => post.data.lang === 'en');
-  return enPosts.map(post => ({
+  // Only generate paths for Chinese posts
+  const zhPosts = posts.filter(post => post.data.lang === 'zh');
+  return zhPosts.map(post => ({
     params: { slug: post.slug },
     props: { post },
   }));
@@ -15,11 +15,11 @@ export async function getStaticPaths() {
 const { post } = Astro.props;
 const { Content } = await post.render();
 
-// Category display names
+// Category display names in Chinese
 const categoryNames: Record<string, string> = {
-  'life-story': 'Life Story',
-  'global-travel': 'Global Travel',
-  'solo-dev': 'Solo Dev',
+  'life-story': '成长轨迹',
+  'global-travel': '环球旅行',
+  'solo-dev': '独立开发',
 };
 ---
 
@@ -27,8 +27,8 @@ const categoryNames: Record<string, string> = {
   <article class="px-4 py-16 sm:px-6 lg:px-8">
     <div class="mx-auto max-w-3xl">
       <!-- Back link -->
-      <a href="/blog" class="text-accent-blue hover:text-accent-blue/80 transition-colors">
-        ← Back to Blog
+      <a href="/zh/blog" class="text-accent-blue hover:text-accent-blue/80 transition-colors">
+        ← 返回博客
       </a>
 
       <!-- Header -->
@@ -37,7 +37,7 @@ const categoryNames: Record<string, string> = {
           {post.data.title}
         </h1>
         <div class="mt-4 flex flex-wrap gap-4 text-sm text-text-muted">
-          <time>{post.data.date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</time>
+          <time>{post.data.date.toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' })}</time>
           <span>·</span>
           <span>{categoryNames[post.data.category] || post.data.category}</span>
         </div>

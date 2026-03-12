@@ -22,31 +22,46 @@ Hepmad is Harry's personal brand platform built on three content pillars:
 
 ```
 hepmad/
-├── .claude/
-│   └── skills/              # Agent Skills
 ├── src/
 │   ├── components/          # Navbar, Footer
 │   ├── content/             # Blog posts (Markdown)
 │   │   └── blog/            # life-story, global-travel, solo-dev
 │   ├── layouts/             # BaseLayout
-│   ├── pages/               # index.astro, blog.astro, blog/[...slug].astro
+│   ├── pages/               # Routes
+│   │   ├── index.astro      # English home
+│   │   ├── blog/            # English blog pages
+│   │   └── zh/              # Chinese pages (home, blog)
 │   └── styles/              # global.css
 ├── public/                  # Static assets
 ├── docs/                    # Local docs (gitignored)
-├── demo/                    # Demo files (gitignored)
 ├── CLAUDE.md                # Project guidelines
-├── astro.config.mjs         # Astro config
+├── astro.config.mjs         # Astro config (with i18n)
 └── tailwind.config.mjs      # Tailwind + theme
 ```
 
-**Note:** `docs/` and `demo/` directories are gitignored - they contain local planning docs and test files.
+**Note:** `docs/` directory is gitignored - it contains local planning docs and test files.
+
+## Bilingual System
+
+### Routing Structure
+- **English (default):** No prefix (e.g., `/`, `/blog`, `/blog/life-story/slug/`)
+- **Chinese:** `/zh` prefix (e.g., `/zh`, `/zh/blog`, `/zh/blog/life-story/slug/`)
+
+### Language Switching
+- Navbar includes language switcher ("中文" / "English")
+- Home, Blog, and Category pages link to corresponding pages in other language
+- Blog post pages link to blog listing in other language
+
+### Content Convention
+- English posts: `post-name.md`
+- Chinese posts: `post-name-zh.md` (same slug with `-zh` suffix)
 
 ## Tech Stack
 
 - **Framework:** Astro 4.16+ (content-first, zero JS by default)
 - **Styling:** Tailwind CSS 3.4+ with custom theme
-- **Content:** Markdown / MDX
-- **i18n:** Astro built-in i18n (English default, Chinese supplementary)
+- **Content:** Markdown / MDX with Content Collections
+- **i18n:** Astro built-in i18n routing
 - **Deployment:** Cloudflare Pages (primary) / Netlify (backup)
 - **Domain:** hepmad.com
 
@@ -55,6 +70,7 @@ hepmad/
 ### UI/UX
 - ✅ **Responsive Design:** Mobile-friendly navigation with hamburger menu
 - ✅ **Theme Switching:** Light/dark mode toggle (light mode default)
+- ✅ **Bilingual Support:** English/Chinese with language switcher
 - ✅ **Custom Color Scheme:**
   - Navbar: Purple (Passion theme-inspired)
   - Footer: Blue-teal
@@ -65,35 +81,7 @@ hepmad/
 - ✅ **Blog System:** Category-based filtering (life-story, global-travel, solo-dev)
 - ✅ **Dynamic Routes:** Static generation for all blog categories
 - ✅ **Content Collections:** Organized blog structure with Zod schema validation
-- ✅ **Category Tags:** Styled with pink/gray color scheme and enhanced border contrast
-
-## Agent Skills
-
-Agent Skills are reusable skill packages that AI Agents can use out of the box.
-
-### Hepmad Website Skills
-
-| Skill | Description | SKILL.md | Status |
-|-------|-------------|----------|--------|
-| `astro-project-init` | Initialize Astro project with Tailwind CSS + dark theme | [Link](.claude/skills/astro-project-init/SKILL.md) | ✅ Active |
-| `tailwind-layout-system` | Add complete page layouts + blog system | [Link](.claude/skills/tailwind-layout-system/SKILL.md) | ✅ Active |
-
-### Content Skills
-
-| Skill | Description | SKILL.md | Status |
-|-------|-------------|----------|--------|
-| `content-layout-expert` | DOCX/PDF -> Markdown -> HTML conversion | [Link](.claude/skills/content-layout-expert/SKILL.md) | ✅ Active |
-| `md-to-pdf` | Markdown -> PDF with Chinese font support | [Link](.claude/skills/md-to-pdf/SKILL.md) | ✅ Active |
-
-### Skill Structure
-
-```
-xxx-skill/
-├── SKILL.md          # Required: Core file with metadata and instructions
-├── scripts/          # Optional: Executable scripts
-├── references/       # Optional: Reference docs, API docs
-└── assets/           # Optional: Templates, configs, static resources
-```
+- ✅ **Language Filtering:** English and Chinese content separated by locale
 
 ## Sub-brands
 
@@ -106,7 +94,7 @@ xxx-skill/
 | Phase | Focus | Status |
 |-------|-------|--------|
 | **Phase 1** | Infrastructure - Agent Skills development | ✅ Complete |
-| **Phase 2** | Website - Build Hepmad & RBH websites | 🔄 Current |
+| **Phase 2** | Website - Build Hepmad & RBH websites | ✅ Complete |
 | **Phase 3** | AI Agent System Development | ⏳ Planned |
 | **Phase 4** | Global Travel & Content Creation | ⏳ Planned |
 | **Phase 5** | Maturation & Optimization | ⏳ Planned |

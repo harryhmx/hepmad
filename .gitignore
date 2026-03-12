@@ -1,8 +1,8 @@
 # Local documentation (planning docs, iterative requirements)
 docs/
 
-# Demo and test files
-demo/
+# Claude AI workspace
+.claude/
 
 # Python cache
 __pycache__/

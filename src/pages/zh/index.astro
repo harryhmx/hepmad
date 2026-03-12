@@ -1,0 +1,116 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Hepmad - 首页">
+  <!-- Hero Section -->
+  <section class="border-b border-bg-tertiary px-4 py-24 sm:py-32 sm:px-6 lg:px-8 bg-bg-secondary">
+    <div class="mx-auto max-w-5xl text-center">
+      <h1 class="text-5xl font-bold font-serif tracking-tight text-text-primary sm:text-7xl">
+        你好，我是 Harry
+      </h1>
+      <p class="mt-8 text-xl leading-relaxed text-text-secondary sm:text-2xl">
+        欢迎来到 Hepmad — 我的个人品牌网站，在这里我分享我的人生故事、
+        旅行经历和独立开发之旅。
+      </p>
+      <div class="mt-12 flex items-center justify-center gap-x-6">
+        <a href="/zh/blog" class="rounded-md bg-accent-blue px-8 py-3 text-base font-semibold text-bg-primary shadow-sm hover:bg-accent-blue/90 transition-colors">
+          阅读博客
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section class="px-4 py-20 sm:px-6 lg:px-8" id="about">
+    <div class="mx-auto max-w-4xl">
+      <h2 class="text-3xl font-bold font-serif tracking-tight text-text-primary">关于我</h2>
+      <p class="mt-6 text-lg leading-relaxed text-text-secondary">
+        Hepmad 来源于 <strong>H</strong>arry + S<strong>ep</strong>tember + No<strong>mad</strong> — 这反映了我的旅程
+        和抱负。我正在构建一种自由、探索和持续成长的生活。
+      </p>
+
+      <h3 class="mt-12 text-2xl font-semibold text-text-primary">核心价值观</h3>
+      <ul class="mt-6 space-y-3 text-text-secondary">
+        <li>• <span class="text-accent-gold">真实</span> — 活出真实的自己</li>
+        <li>• <span class="text-accent-gold">好奇</span> — 永远学习，永远探索</li>
+        <li>• <span class="text-accent-gold">自由</span> — 设计地点独立的生活</li>
+        <li>• <span class="text-accent-gold">创造</span> — 构建有意义的事物</li>
+        <li>• <span class="text-accent-gold">连接</span> — 分享故事和经历</li>
+      </ul>
+
+      <h3 class="mt-12 text-2xl font-semibold text-text-primary">时间线</h3>
+      <div class="mt-6 space-y-3 text-text-secondary">
+        <p><span class="text-accent-gold font-semibold">2006</span> — 第一次重大挫折，学会了韧性</p>
+        <p><span class="text-accent-gold font-semibold">2007</span> — 前往泰国读大学，开启环球之旅</p>
+        <p><span class="text-accent-gold font-semibold">2014</span> — 回到中国，在深圳开始工作</p>
+        <p><span class="text-accent-gold font-semibold">2015-2020</span> — 旅游业创业尝试</p>
+        <p><span class="text-accent-gold font-semibold">2020-2025</span> — 疫情期间在海外，探索与合伙</p>
+        <p><span class="text-accent-gold font-semibold">2026</span> — 启动 Hepmad，投身独立开发之路</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Blog Section -->
+  <section class="border-t border-bg-tertiary bg-bg-secondary px-4 py-20 sm:px-6 lg:px-8">
+    <div class="mx-auto max-w-5xl">
+      <h2 class="text-3xl font-bold font-serif tracking-tight text-text-primary">博客精选</h2>
+      <p class="mt-4 text-lg text-text-secondary">
+        我主要写三个领域的生活。
+      </p>
+
+      <div class="mt-10 grid gap-6 sm:grid-cols-3">
+        <a href="/zh/blog/life-story" class="group rounded-lg border border-bg-tertiary bg-blog-card-bg p-8 shadow-sm hover:border-accent-gold/50 transition-all hover:shadow-md">
+          <h3 class="text-2xl font-serif font-semibold text-blog-card-title group-hover:text-accent-gold transition-colors">
+            成长轨迹
+          </h3>
+          <p class="mt-3 text-sm text-text-secondary">
+            个人成长与生活思考
+          </p>
+        </a>
+
+        <a href="/zh/blog/global-travel" class="group rounded-lg border border-bg-tertiary bg-blog-card-bg p-8 shadow-sm hover:border-accent-gold/50 transition-all hover:shadow-md">
+          <h3 class="text-2xl font-serif font-semibold text-blog-card-title group-hover:text-accent-gold transition-colors">
+            环球旅行
+          </h3>
+          <p class="mt-3 text-sm text-text-secondary">
+            旅行故事与全球经历
+          </p>
+        </a>
+
+        <a href="/zh/blog/solo-dev" class="group rounded-lg border border-bg-tertiary bg-blog-card-bg p-8 shadow-sm hover:border-accent-gold/50 transition-all hover:shadow-md">
+          <h3 class="text-2xl font-serif font-semibold text-blog-card-title group-hover:text-accent-gold transition-colors">
+            独立开发
+          </h3>
+          <p class="mt-3 text-sm text-text-secondary">
+            开发日志与幕后故事
+          </p>
+        </a>
+      </div>
+
+      <div class="mt-10 text-center">
+        <a href="/zh/blog" class="text-accent-blue hover:text-accent-blue/80 transition-colors">
+          查看所有文章 →
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <section class="border-t border-bg-tertiary px-4 py-20 sm:px-6 lg:px-8" id="contact">
+    <div class="mx-auto max-w-4xl text-center">
+      <h2 class="text-3xl font-bold font-serif tracking-tight text-text-primary">联系我</h2>
+      <p class="mt-4 text-lg text-text-secondary">
+        欢迎通过邮件联系我或在社交媒体上关注我。
+      </p>
+      <div class="mt-8 flex justify-center space-x-8">
+        <a href="mailto:harry_ctu@hotmail.com" class="text-text-secondary hover:text-accent-blue transition-colors">
+          邮件
+        </a>
+        <a href="https://github.com/harryhmx" target="_blank" rel="noopener" class="text-text-secondary hover:text-accent-blue transition-colors">
+          GitHub
+        </a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

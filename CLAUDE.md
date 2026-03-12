@@ -15,8 +15,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **Current Phase:** Phase 2 - Website Development ✅ Complete
 - Focus: Building Hepmad official website (Astro + Tailwind)
-- Website MVP complete with full layouts, blog system, responsive design, and Passion theme styling
+- Website MVP complete with full layouts, blog system, responsive design, Passion theme styling, and bilingual support
 - Theme system (light/dark mode) implemented
+- Bilingual routing (English/Chinese) implemented
 - **Live at:** https://hepmad.com
 - Content refinement in progress
 
@@ -28,33 +29,39 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 hepmad/                              # Root directory IS the Astro website
 ├── src/                             # Astro source code
 │   ├── components/                  # Components (Navbar, Footer)
+│   │   └── Navbar.astro             # Locale-aware navbar with language switcher
 │   ├── content/                     # Blog posts (Markdown)
 │   │   └── blog/                    # life-story/, global-travel/, solo-dev/
 │   ├── layouts/                     # Page layouts (BaseLayout)
-│   ├── pages/                       # Routes (index.astro, blog.astro, blog/[...slug].astro)
+│   ├── pages/                       # Routes
+│   │   ├── index.astro              # English home page
+│   │   ├── blog.astro               # English blog listing (en posts only)
+│   │   ├── blog/[category].astro    # English category pages
+│   │   ├── blog/[...slug].astro     # English blog posts (en posts only)
+│   │   └── zh/                      # Chinese pages
+│   │       ├── index.astro          # Chinese home page
+│   │       ├── blog.astro           # Chinese blog listing (zh posts only)
+│   │       ├── blog/[category].astro # Chinese category pages
+│   │       └── blog/[...slug].astro # Chinese blog posts (zh posts only)
 │   └── styles/                      # Global styles (global.css)
-├── public/                          # Static assets (favicon, images)
 │
-├── .claude/
-│   └── skills/                      # Hepmad + HarryMath related Skills ONLY
+├── public/                          # Static assets (favicon, images)
 │
 ├── docs/                            # Local documentation (gitignored)
 │
-├── demo/                            # Demo files (gitignored)
+├── astro.config.mjs                 # Astro configuration (with i18n)
 │
-├── astro.config.mjs                 # Astro configuration
 └── tailwind.config.mjs              # Tailwind + theme configuration
 ```
 
 **Key Directories:**
 - `docs/` - Contains all project planning docs. These are "plain language" requirements, not formal specs. Files here are gitignored.
-- `.claude/skills/` - Production Agent Skills folders. Each skill is a kebab-case folder with SKILL.md, scripts/, references/, assets/
-- `demo/` - Temporary demo/test files
 
 **Related Projects (separate directories):**
-- `~/projects/huang/` - HarryMath website (Hexo, reusing harryhmx.github.io)
+- `~/projects/harry-math/` - HarryMath website (Hexo, reusing harryhmx.github.io)
 - `~/projects/rbh-core/` - RBH current site (Vue3 + Django)
 - `~/projects/really-brave-hearts/` - RBH refactor (Next.js - Phase 2)
+- `~/projects/huang/` - Collection of Customized Agent Skills
 - `~/projects/[ai-agent-system]/` - AI Agent System (Phase 3 - to be created)
 
 ## Tech Stack (Phase 2 - Current)
@@ -64,20 +71,21 @@ hepmad/                              # Root directory IS the Astro website
 Framework: Astro 4.16+
 Styling: Tailwind CSS 3.4+ with custom theme variables
 Content: Markdown / MDX with Content Collections
-i18n: Astro built-in i18n (English default)
+i18n: Astro built-in i18n routing (en default, zh with prefix)
 Deployment: Cloudflare Pages (primary) / Netlify (backup)
 Domain: hepmad.com
 ```
 
 **Why Astro:**
 - Purpose-built for content sites, zero JS by default
-- Built-in i18n support for bilingual content
+- Built-in i18n routing for bilingual content
 - Lightweight, pure static output
 - Cloudflare Pages: excellent overseas access, good domestic access, unlimited free bandwidth
 
 **Implemented Features:**
 - ✅ Responsive navigation with hamburger menu (mobile-friendly)
 - ✅ Light/dark theme toggle (light mode default, localStorage persistence)
+- ✅ Bilingual system with language switcher
 - ✅ Custom color scheme:
   - Navbar: Purple (Passion theme-inspired) - `#5d3478` (light) / `#8a4eb1` (dark)
   - Footer: Blue-teal - `#0e7490` (light) / `#164e63` (dark)
@@ -94,67 +102,64 @@ Domain: hepmad.com
 - **RBH Website**: Next.js + Tailwind + Vercel (refactor target)
 - **AI Agent System**: TBD (Phase 3 decision)
 
-## Agent Skills Development Workflow
+## Bilingual System
 
-**Vibe Coding Approach:**
+### Routing Structure
+- **English (default):** No prefix
+  - Home: `/`
+  - Blog: `/blog`
+  - Category: `/blog/life-story`
+  - Post: `/blog/life-story/post-slug/`
 
-1. Create `docs/create-xxx-skill.md` with "plain language" requirements (casual, iterative)
-2. AI Agent reads the file and executes development
-3. Test and validate → append new requirements with `---` separator
-4. The file itself becomes the requirement evolution record
+- **Chinese:** `/zh` prefix
+  - Home: `/zh`
+  - Blog: `/zh/blog`
+  - Category: `/zh/blog/life-story`
+  - Post: `/zh/blog/life-story/post-slug-zh/`
 
-**Agent Skills Structure:**
-```
-xxx-skill/
-├── SKILL.md          # Required: Core file with metadata and instructions
-├── scripts/          # Optional: Executable scripts (Python, Bash, JS, etc.)
-├── references/       # Optional: Reference docs, API docs
-└── assets/           # Optional: Templates, configs, static resources
-```
+### Language Switching
+- Navbar has integrated language switcher (not a separate component)
+- Menu items are locale-aware: Home/首页, Blog/博客
+- Language link: 中文 (on English pages) / English (on Chinese pages)
+- Smart linking:
+  - Home ↔ Home (different locale)
+  - Blog listing ↔ Blog listing (different locale)
+  - Category ↔ Category (different locale)
+  - Blog post → Blog listing (different locale)
 
-**SKILL.md Format Standard:**
-```yaml
----
-name: skill-name          # Required, kebab-case
-description: "Clear description of what this skill does"  # Required, MUST use quotes
-author: author-name       # Optional
-version: "1.0.0"          # Optional
----
+### Content Convention
+- **English posts:** Use slug directly (e.g., `my-post.md`)
+- **Chinese posts:** Add `-zh` suffix to filename (e.g., `my-post-zh.md`)
+- Content schema has `lang` field: `z.enum(['en', 'zh']).default('en')`
+- Each language generates routes only for its own content
 
-# Skill Name (Human Readable)
+### Adding Bilingual Content
 
-## Use Cases
-- Use case 1
-- Use case 2
+When creating a new blog post in both languages:
 
-## Input
-- Input description
+1. **English version:**
+   ```bash
+   # Create: src/content/blog/category/my-post.md
+   ---
+   title: "My Post Title"
+   description: "Post description"
+   date: 2026-01-01
+   lang: en
+   category: life-story
+   ---
+   ```
 
-## Output
-- Output description
-
-## How to Use
-Usage instructions
-
-## Scripts
-- Script descriptions
-
-## Dependencies
-- Dependency list
-
-## Notes
-- Additional notes
-```
-
-**Critical Format Rules:**
-- `description` field **MUST be wrapped in quotes** to avoid YAML parsing errors with special characters (colons, commas, etc.)
-- `name` should use kebab-case (lowercase with hyphens)
-- Separate front matter with `---` on its own line
-
-**Organization Principle:**
-- Agent Skills are organized by project
-- Hepmad project: `.claude/skills/` contains ONLY Hepmad website + HarryMath related skills
-- Other projects have their own `.claude/skills/` directories
+2. **Chinese version:**
+   ```bash
+   # Create: src/content/blog/category/my-post-zh.md
+   ---
+   title: "我的文章标题"
+   description: "文章描述"
+   date: 2026-01-01
+   lang: zh
+   category: life-story
+   ---
+   ```
 
 ## Content Architecture
 
@@ -162,7 +167,7 @@ Usage instructions
 | Pillar | Content Focus | Example Topics |
 |--------|---------------|----------------|
 | **Life Story** | Systematic record of growth and daily life | 2006-2026 timeline, personal growth reflections |
-| **Travel** | Travel stories, photos, maps, living abroad | Travel memoirs, country experiences, photo collections |
+| **Global Travel** | Travel stories, photos, maps, living abroad | Travel memoirs, country experiences, photo collections |
 | **Solo Dev** | Development logs, thoughts, behind-the-scenes | Dev journals, technical thoughts, project progress |
 
 **Content Boundary:** Math research and teaching videos are primarily shared on HarryMath sub-brand, not on main Hepmad site.
@@ -171,27 +176,29 @@ Usage instructions
 | Category | Content | Examples |
 |----------|---------|----------|
 | **Sub-brands** | Brands Harry created and leads | HarryMath |
-| **DSP** | AI Agent System | "Operating system" that runs Agent Skills |
+| **DSP** | AI Agent System | "Operating system" for AI capabilities |
 | **Partnerships** | Joint projects with partners | Overseas study/parenting, RBH English education |
 
 ## Language Strategy
 
 - **Default: English** - complete content, timely updates
 - **Chinese: Supplementary** - serves domestic audience
-- **Deployment: Cloudflare Pages / Vercel** - best overseas access, accessible in China
+- **Routing:** English (no prefix), Chinese (`/zh` prefix)
+- **Deployment:** Cloudflare Pages / Vercel - best overseas access, accessible in China
 - **Cross-platform:** Chinese content can link to Xiaohongshu, WeChat, etc.
 
 ## Development Phases
 
 ### Phase 1 (Complete): Infrastructure Building
-- ✅ MVP Agent Skills created and validated: `astro-project-init`, `tailwind-layout-system`
-- Both skills now Active and production-ready
+- ✅ MVP development infrastructure completed
+- ✅ Development workflow established
 
 ### Phase 2 (Current): Development & Creation
 - ✅ Hepmad website MVP complete (Astro + Tailwind)
   - Full layouts: Home, Blog listing, Blog detail
-  - Content Collections with 3 pillars: life-story, travel, solo-dev
+  - Content Collections with 3 pillars: life-story, global-travel, solo-dev
   - "Late Night Flight" dark theme
+  - Bilingual routing system (English/Chinese)
 - 🔄 Content refinement in progress
 - ⏳ Refactor RBH website (Next.js + Tailwind)
 
@@ -219,7 +226,7 @@ Usage instructions
 ### Sub-brand: HarryMath
 - **Positioning:** Math education content creator
 - **Platforms:** BiliBili, Douyin, Xiaohongshu, harryhmx.github.io
-- **Tech Stack:** Remotion/Manim + Agent Skills
+- **Tech Stack:** Remotion/Manim
 - **Relationship:** Independent sub-brand under Hepmad; Hepmad shares occasional dev process, HarryMath site has detailed technical content
 
 ### Partnership Projects
@@ -234,7 +241,7 @@ Usage instructions
 
 Before running ANY git commands, ALWAYS change to the project root directory. Git commands must be run from the repository root to ensure correct file paths and status detection.
 
-**Solo Developer Workflow (Recommended for Phase 1):**
+**Solo Developer Workflow (Recommended for Phase 2):**
 ```bash
 # Step 1: Navigate to project root (REQUIRED - prevents path errors)
 cd ~/projects/hepmad
@@ -245,7 +252,7 @@ git status
 # Step 3: Stage changes
 git add .
 # Or specific files:
-git add README.md .claude/skills/new-skill/
+git add README.md src/pages/index.astro
 
 # Step 4: Commit with clear message
 git commit -m "type: brief description"
@@ -270,75 +277,20 @@ git push
 
 **For detailed Git workflow guidelines, see:** `docs/execution-log.md`
 
-### Agent Skills Development (Phase 1)
+### Website Development (Phase 2)
 
-**Current Hepmad Website Skills (MVP - Validated):**
-
-| Skill | Purpose | Usage |
-|-------|---------|-------|
-| `astro-project-init` | Initialize Astro project with Tailwind CSS + dark theme | Creates runnable project with minimal Home page |
-| `tailwind-layout-system` | Add complete page layouts and blog system | Adds full Home page, Blog listing, and detail pages |
-
-> **Status:** Both skills validated and ready for use.
-
-**Running Agent Skill Scripts:**
-
-**Bash scripts** (astro-project-init, tailwind-layout-system):
+**Development:**
 ```bash
-# No virtual environment needed for Bash scripts
-bash ~/projects/hepmad/.claude/skills/astro-project-init/scripts/init.sh hepmad .
-bash ~/projects/hepmad/.claude/skills/tailwind-layout-system/scripts/setup.sh .
-```
-
-**Python scripts** (content-layout-expert, md-to-pdf):
-
-> **IMPORTANT:** Always activate the virtual environment before running any Python script from Agent Skills.
-
-```bash
-# Method 1: Activate venv first, then run script
-source ~/venv/hepmad/bin/activate
-cd ~/projects/hepmad
-python .claude/skills/<skill-name>/scripts/<script>.py <arguments>
-
-# Method 2: One-liner (absolute paths)
-source ~/venv/hepmad/bin/activate && python ~/projects/hepmad/.claude/skills/<skill-name>/scripts/<script>.py <arguments>
-```
-
-**Creating New Skills:**
-```bash
-# 1. Create docs/create-xxx-skill.md with plain language requirements
-# 2. Ask AI Agent to read and execute
-# 3. Iterate by appending with --- separator
-```
-
-### Website Development (Phase 2 - Ready to Build)
-
-**Quick Start with Agent Skills:**
-```bash
-# Step 1: Initialize Astro project with dark theme
-bash ~/projects/hepmad/.claude/skills/astro-project-init/scripts/init.sh hepmad .
-cd hepmad
-npm install
-npm run dev  # Verify project runs
-
-# Step 2: Add complete page layouts and blog system
-bash ~/projects/hepmad/.claude/skills/tailwind-layout-system/scripts/setup.sh .
-npm run dev  # View complete website
-```
-
-**Manual Setup (if needed):**
-```bash
-# Astro + Tailwind setup
-npm create astro@latest
-npx astro add tailwind
-
-# Development
 npm run dev
+```
 
-# Build
+**Build:**
+```bash
 npm run build
+```
 
-# Preview
+**Preview:**
+```bash
 npm run preview
 ```
 
@@ -350,23 +302,19 @@ npm run preview
 
 ## Important Notes
 
-1. **Phase 1 Status:** MVP Agent Skills are complete. You can now use `astro-project-init` and `tailwind-layout-system` to build the Hepmad website.
+1. **Git Workflow:** As a solo developer, keep it simple - develop directly on `main` for most changes. Use branches only for large features or when collaborating. Detailed guidelines in `docs/execution-log.md`.
 
-2. **Git Workflow:** As a solo developer, keep it simple - develop directly on `main` for most changes. Use branches only for large features or when collaborating. Detailed guidelines in `docs/execution-log.md`.
+2. **Content Boundaries:** Hepmad main site focuses on three core pillars. HarryMath content goes to its own channels. DSP (AI Agent System) will have its own site. Partnership projects have independent sites.
 
-3. **Content Boundaries:** Hepmad main site focuses on three core pillars. HarryMath content goes to its own channels. DSP (AI Agent System) will have its own site. Partnership projects have independent sites.
+3. **Language:** Technical documentation and AI communication in English for precision.
 
-4. **Language:** Technical documentation and AI communication in English for precision.
+4. **Docs are Gitignored:** Files in `docs/` are gitignored - they're for local planning and iterative requirements gathering.
 
-5. **Skills Organization:** Only Hepmad website + HarryMath related skills go in `.claude/skills/`. Other projects have their own skill directories.
+5. **"Vibe Coding":** Requirements in `docs/` are casual "plain language" specs, not formal documents. Let them evolve naturally.
 
-6. **Docs are Gitignored:** Files in `docs/` are gitignored - they're for local planning and iterative requirements gathering.
-
-7. **"Vibe Coding":** Requirements in `docs/` are casual "plain language" specs, not formal documents. Let them evolve naturally.
-
-8. **Always Use Absolute Paths for File Operations:** When using Bash tool to perform operations that modify the filesystem (e.g., `rm`, `mv`, file conversion), ALWAYS use absolute paths. Relative paths depend on current working directory and can lead to mistakes.
-   - ✓ `rm -rf ~/projects/hepmad/demo/bill-tao/math/images`
-   - ✓ `python ~/projects/hepmad/.claude/skills/content-layout-expert/scripts/convert_to_markdown.py /path/to/file.docx`
+6. **Always Use Absolute Paths for File Operations:** When using Bash tool to perform operations that modify the filesystem (e.g., `rm`, `mv`, file conversion), ALWAYS use absolute paths. Relative paths depend on current working directory and can lead to mistakes.
+   - ✓ `rm -rf ~/projects/hepmad/docs`
+   - ✓ `python ~/projects/hepmad/scripts/convert.py /path/to/file.docx`
    - ✗ `rm -rf images tables` (unsafe - depends on cwd)
    - ✗ `python convert.py file.docx` (unsafe - depends on cwd)
    - Exception: Read-only commands like `ls`, `cat`, `grep` may use relative paths for convenience when the context is clear.

@@ -1,0 +1,110 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const categories = ['life-story', 'global-travel', 'solo-dev'];
+  return categories.map(category => ({
+    params: { category },
+  }));
+}
+
+const { category } = Astro.params;
+
+// Get all Chinese blog posts
+const allPosts = await getCollection('blog');
+const categoryPosts = allPosts.filter(
+  post => post.data.category === category && post.data.lang === 'zh'
+);
+
+// Sort by date (newest first)
+const displayPosts = categoryPosts.sort((a, b) =>
+  b.data.date.valueOf() - a.data.date.valueOf()
+);
+
+// Category display names in Chinese
+const categoryNames: Record<string, string> = {
+  'life-story': '成长轨迹',
+  'global-travel': '环球旅行',
+  'solo-dev': '独立开发',
+};
+
+const currentCategoryName = categoryNames[category] || category;
+
+// Filter link class helper
+const isActive = (cat: string) => cat === category;
+---
+
+<BaseLayout title={`${currentCategoryName} - Hepmad`}>
+  <div class="px-4 py-16 sm:px-6 lg:px-8">
+    <div class="mx-auto max-w-4xl">
+      <h1 class="text-4xl font-bold font-serif tracking-tight text-text-primary">{currentCategoryName}</h1>
+
+      <!-- Category Filter -->
+      <div class="mt-10 flex flex-wrap gap-3">
+        <a
+          href="/zh/blog"
+          class="rounded-md bg-tag-bg-inactive px-5 py-2 text-tag-text-inactive border-2 border-tag-border hover:border-tag-border hover:text-text-primary font-medium transition-all"
+        >
+          全部
+        </a>
+        <a
+          href="/zh/blog/life-story"
+          class={`rounded-md px-5 py-2 border-2 border-tag-border font-medium transition-all ${
+            isActive('life-story')
+              ? 'bg-tag-bg-active text-tag-text-active'
+              : 'bg-tag-bg-inactive text-tag-text-inactive hover:border-tag-border hover:text-text-primary'
+          }`}
+        >
+          成长轨迹
+        </a>
+        <a
+          href="/zh/blog/global-travel"
+          class={`rounded-md px-5 py-2 border-2 border-tag-border font-medium transition-all ${
+            isActive('global-travel')
+              ? 'bg-tag-bg-active text-tag-text-active'
+              : 'bg-tag-bg-inactive text-tag-text-inactive hover:border-tag-border hover:text-text-primary'
+          }`}
+        >
+          环球旅行
+        </a>
+        <a
+          href="/zh/blog/solo-dev"
+          class={`rounded-md px-5 py-2 border-2 border-tag-border font-medium transition-all ${
+            isActive('solo-dev')
+              ? 'bg-tag-bg-active text-tag-text-active'
+              : 'bg-tag-bg-inactive text-tag-text-inactive hover:border-tag-border hover:text-text-primary'
+          }`}
+        >
+          独立开发
+        </a>
+      </div>
+
+      <!-- Blog Posts -->
+      <div class="mt-12 space-y-10">
+        {displayPosts.length === 0 ? (
+          <p class="text-center text-text-muted">该分类下暂无文章。</p>
+        ) : (
+          displayPosts.map((post) => (
+            <article class="border-b border-bg-tertiary pb-10 last:border-0">
+              <h2 class="text-2xl font-bold font-serif text-text-primary">
+                <a href={`/zh/blog/${post.slug}`} class="hover:text-accent-blue transition-colors">
+                  {post.data.title}
+                </a>
+              </h2>
+              <p class="mt-2 text-sm text-text-muted">
+                {post.data.date.toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' })} · {categoryNames[post.data.category] || post.data.category}
+              </p>
+              <p class="mt-3 text-text-secondary">
+                {post.data.description}
+              </p>
+              <a href={`/zh/blog/${post.slug}`} class="mt-4 inline-block text-accent-blue hover:text-accent-blue/80 transition-colors">
+                阅读更多 →
+              </a>
+            </article>
+          ))
+        )}
+      </div>
+    </div>
+  </div>
+</BaseLayout>

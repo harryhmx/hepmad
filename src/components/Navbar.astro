@@ -1,4 +1,36 @@
 ---
+// Get current locale and path
+const currentLocale = Astro.currentLocale ?? 'en';
+const isZh = currentLocale === 'zh';
+const currentPath = Astro.url.pathname;
+
+// Build path for other language
+function getAltPath(path: string, fromZh: boolean): string {
+  // Check if it's a blog post path: /blog/category/slug/ or /zh/blog/category/slug/
+  const isBlogPost = /^\/(zh\/)?blog\/[^/]+\/[^/]+\/?$/.test(path);
+
+  // For blog post pages, link to blog listing page in other language
+  if (isBlogPost) {
+    return fromZh ? '/blog' : '/zh/blog';
+  }
+
+  if (fromZh) {
+    // From zh to en: remove /zh prefix
+    return path.replace(/^\/zh(\/|$)/, '$1') || '/';
+  } else {
+    // From en to zh: add /zh prefix
+    if (path === '/') {
+      return '/zh';
+    }
+    return '/zh' + path;
+  }
+}
+
+// Current page and alt language page paths
+const homePath = isZh ? '/zh' : '/';
+const blogPath = isZh ? '/zh/blog' : '/blog';
+const altPath = getAltPath(currentPath, isZh);
+const altLabel = isZh ? 'English' : '中文';
 ---
 
 <script define:vars={{ menuId: 'mobile-menu', buttonId: 'menu-button' }}>
@@ -60,15 +92,22 @@
     <div class="flex h-16 justify-between">
       <!-- Logo -->
       <div class="flex">
-        <a href="/" class="flex flex-shrink-0 items-center">
+        <a href={homePath} class="flex flex-shrink-0 items-center">
           <span class="text-xl font-bold font-serif navbar-logo">Hepmad</span>
         </a>
       </div>
 
       <!-- Desktop Menu -->
       <div class="hidden md:flex items-center space-x-8">
-        <a href="/" class="navbar-link transition-colors">Home</a>
-        <a href="/blog" class="navbar-link transition-colors">Blog</a>
+        <a href={homePath} class="navbar-link transition-colors">
+          {isZh ? '首页' : 'Home'}
+        </a>
+        <a href={blogPath} class="navbar-link transition-colors">
+          {isZh ? '博客' : 'Blog'}
+        </a>
+        <a href={altPath} class="navbar-link transition-colors" title={altLabel}>
+          {altLabel}
+        </a>
       </div>
 
       <!-- Mobile Menu Button -->
@@ -101,18 +140,26 @@
   <div class="hidden md:hidden" id="mobile-menu">
     <div class="navbar-passion px-2 pt-2 pb-3 space-y-1">
       <a
-        href="/"
+        href={homePath}
         onclick="toggleMenu()"
         class="block rounded-md px-3 py-2 text-base font-medium navbar-link transition-colors"
       >
-        Home
+        {isZh ? '首页' : 'Home'}
       </a>
       <a
-        href="/blog"
+        href={blogPath}
         onclick="toggleMenu()"
         class="block rounded-md px-3 py-2 text-base font-medium navbar-link transition-colors"
       >
-        Blog
+        {isZh ? '博客' : 'Blog'}
+      </a>
+      <a
+        href={altPath}
+        onclick="toggleMenu()"
+        class="block rounded-md px-3 py-2 text-base font-medium navbar-link transition-colors"
+        title={altLabel}
+      >
+        {altLabel}
       </a>
     </div>
   </div>
